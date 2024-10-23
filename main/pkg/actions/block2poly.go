@@ -6,7 +6,7 @@ import (
 )
 
 func Block2poly(block string) (ret []uint) {
-	a := utils.NewLongFromBase64InBigEndian(block).BigInt()
+	a := utils.NewLongFromBase64(block).BigInt()
 	return Number2Coefficients(a)
 }
 

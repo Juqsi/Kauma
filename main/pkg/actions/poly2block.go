@@ -14,14 +14,13 @@ type Polynom struct {
 
 func Poly2Block(coefficients []uint) string {
 	number := Coeff2Number(coefficients)
-	return utils.NewLongFromBigInt(number).GetBigEndianInBase64()
+	return utils.NewLongFromBigInt(number).GetBase64(-1)
 }
 
 func Coeff2Number(coefficients []uint) *big.Int {
 	number := new(big.Int)
 	for _, coeff := range coefficients {
-		tmp := new(big.Int).Lsh(big.NewInt(1), coeff)
-		number = new(big.Int).Or(number, tmp)
+		number.SetBit(number, int(coeff), 1)
 	}
 	return number
 }
