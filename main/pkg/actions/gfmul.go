@@ -5,34 +5,45 @@ import (
 	"math/big"
 )
 
+type Gfmul struct {
+	Semantic string `json:"semantic"`
+	Factor1  string `json:"a"`
+	Factor2  string `json:"b"`
+	Result   string `json:"product"`
+}
+
+func (g *Gfmul) Execute() {
+	result := GfmulBigInt(utils.NewLongFromBase64(g.Factor1).BigInt(), utils.NewLongFromBase64(g.Factor2).BigInt(), Coeff2Number([]uint{128, 7, 2, 1, 0}))
+	g.Result = utils.NewLongFromBigInt(result).GetBase64(16)
+}
+
 func GfmulBigInt(factor1, factor2, reduce *big.Int) *big.Int {
 	result := big.NewInt(0)
-	tmpFactor1 := new(big.Int).Set(factor1) // Kopiere factor1, um es zu verändern
-	tmpFactor2 := new(big.Int).Set(factor2) // Kopiere factor2, um es zu verändern
-	tmpReduce := new(big.Int).Set(reduce)   // Kopiere reduce für die Reduktion
+	tmpFactor1 := new(big.Int)
+	tmpFactor2 := new(big.Int)
 
-	// Iteriere durch die Bits von factor2
+	if factor1.BitLen() < factor2.BitLen() {
+		tmpFactor1.Set(factor2)
+		tmpFactor2.Set(factor1)
+	} else {
+		tmpFactor1.Set(factor1)
+		tmpFactor2.Set(factor2)
+	}
+
+	tmpReduce := new(big.Int).Set(reduce)
+
 	for tmpFactor2.BitLen() > 0 {
-		// Wenn das niedrigste Bit in factor2 gesetzt ist
 		if tmpFactor2.Bit(0) == 1 {
-			result.Xor(result, tmpFactor1) // XOR mit dem ersten Faktor
+			result.Xor(result, tmpFactor1)
 		}
 
-		// Shift factor1 nach links (entspricht einer Multiplikation mit x)
 		tmpFactor1.Lsh(tmpFactor1, 1)
 
-		// Wenn factor1 größer als das Reduktionspolynom wird, wird reduziert
 		if tmpFactor1.BitLen() >= reduce.BitLen() {
-			tmpFactor1.Xor(tmpFactor1, tmpReduce) // Polynommodulo-Operation
+			tmpFactor1.Xor(tmpFactor1, tmpReduce)
 		}
 
-		// Shift factor2 nach rechts (wir verarbeiten das nächste Bit)
 		tmpFactor2.Rsh(tmpFactor2, 1)
 	}
 	return result
-}
-
-func Gfmul(faktor1, faktor2 string) string {
-	result := GfmulBigInt(utils.NewLongFromBase64(faktor1).BigInt(), utils.NewLongFromBase64(faktor2).BigInt(), Coeff2Number([]uint{128, 7, 2, 1, 0}))
-	return utils.NewLongFromBigInt(result).GetBase64(16)
 }

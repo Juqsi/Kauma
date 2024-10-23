@@ -8,19 +8,20 @@ import (
 func TestBlock2Poly(t *testing.T) {
 	testcases := []struct {
 		title    string
-		input    string
+		input    Block2Poly
 		expected []uint
 	}{
 		{
 			title:    "Basic Test",
-			input:    "ARIAAAAAAAAAAAAAAAAAgA==",
+			input:    Block2Poly{Block: "ARIAAAAAAAAAAAAAAAAAgA=="},
 			expected: []uint{12, 127, 0, 9},
 		},
 	}
 
 	for _, testcase := range testcases {
 		t.Run(testcase.title, func(t *testing.T) {
-			response := Block2poly(testcase.input)
+			testcase.input.Execute()
+			response := testcase.input.Result
 			assert.ElementsMatch(t, testcase.expected, response, "Expected %v, got %v", testcase.expected, response)
 		})
 	}
