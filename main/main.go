@@ -1,11 +1,11 @@
 package main
 
 import (
-	"Abgabe/main/pkg/actions"
+	"Abgabe/main/testcases"
+	"fmt"
 )
 
 func main() {
-	a := new(actions.Block2Poly)
-	a.Block = "ARIAAAAAAAAAAAAAAAAAgA=="
-	a.Execute()
+	tests := testcases.GetTestcases()
+	fmt.Println(tests)
 }

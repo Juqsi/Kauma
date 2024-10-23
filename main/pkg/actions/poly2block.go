@@ -5,16 +5,10 @@ import (
 	"math/big"
 )
 
-/*func Poly2Block(coefficients []uint) string {
-	number := Coeff2Number(coefficients)
-	return utils.NewLongFromBigInt(number).GetBase64(-1)
-}
-*/
-
 type Poly2Block struct {
-	Semantic     string `json:"semantic"`
-	Coefficients []uint `json:"coefficients"`
-	Result       string `json:"block"`
+	Semantic     string `json:"Semantic"`
+	Coefficients []uint `json:"Coefficients"`
+	Result       string `json:"Block"`
 }
 
 func (p *Poly2Block) Execute() {

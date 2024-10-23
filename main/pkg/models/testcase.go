@@ -1,9 +1,12 @@
 package models
 
+import "encoding/json"
+
 type Testcase struct {
-	Key    string
-	Action string         `json:"action"`
-	Values ActionExecutor `json:"arguments"`
+	//Key       string
+	Action    string          `json:"action"`
+	Arguments json.RawMessage `json:"arguments"`
+	//Values    ActionExecutor
 }
 
 type TestcaseFile struct {

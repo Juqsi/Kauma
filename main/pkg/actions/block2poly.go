@@ -2,23 +2,19 @@ package actions
 
 import (
 	"Abgabe/main/pkg/utils"
+	"fmt"
 	"math/big"
 )
 
-/*
-func Block2poly(block string) (ret []uint) {
-	a := utils.NewLongFromBase64(block).BigInt()
-	return Number2Coefficients(a)
-}
-*/
-
 type Block2Poly struct {
-	Semantic string `json:"semantic"`
+	Semantic string `json:"Semantic"`
 	Block    string `json:"block"`
-	Result   []uint `json:"coefficients"`
+	Result   []uint `json:"Coefficients"`
 }
 
 func (b *Block2Poly) Execute() {
+	fmt.Println(b.Block)
+	fmt.Println(b)
 	b.Result = Number2Coefficients(utils.NewLongFromBase64(b.Block).BigInt())
 }
 

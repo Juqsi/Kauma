@@ -6,7 +6,7 @@ import (
 )
 
 type Gfmul struct {
-	Semantic string `json:"semantic"`
+	Semantic string `json:"Semantic"`
 	Factor1  string `json:"a"`
 	Factor2  string `json:"b"`
 	Result   string `json:"product"`
