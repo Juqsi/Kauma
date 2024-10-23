@@ -1,0 +1,66 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - '**'  # Triggert für alle Branches
+  pull_request:
+    branches:
+      - main  # Triggert nur für PRs, die auf den main Branch gerichtet sind
+
+jobs:
+  build:
+    name: Build and analyze Go project
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones sollten deaktiviert sein für eine bessere Relevanz der Analyse
+
+      # Set up Go environment
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '^1.17'  # Verwende die Go-Version (hier Go 1.17), die zu deinem Projekt passt
+
+      # Cache Go modules (optional but recommended for faster builds)
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      # Install Go project dependencies
+      - name: Install dependencies
+        run: |
+          go mod download
+
+      # Run tests (optional, if you want to include tests before analysis)
+      - name: Run Go tests
+        run: |
+          go test ./...
+
+      # Run SonarQube analysis
+      - uses: sonarsource/sonarqube-scan-action@v3
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      # Check the SonarQube Quality Gate only for PRs to the main branch
+      - name: Check the Quality Gate
+        if: github.event_name == 'pull_request' && github.base_ref == 'main'
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # Fail the build if the quality gate fails (only for PRs to the main branch)
+      - name: Fail if Quality Gate fails
+        if: failure() && github.event_name == 'pull_request' && github.base_ref == 'main'
+        run: exit 1
