@@ -33,7 +33,7 @@ func getTestCasesFromJSON(jsonData string) (string, error) {
 		return "", err
 	}
 
-	result := make(map[string]interface{})
+	result := make(map[string]map[string]interface{})
 
 	for key, testCase := range testCases.Testcases {
 		switch testCase.Action {
@@ -44,7 +44,7 @@ func getTestCasesFromJSON(jsonData string) (string, error) {
 				continue
 			}
 			args.Execute()
-			result[key] = args
+			result[key] = map[string]interface{}{"block": args.Result}
 
 		case "block2poly":
 			var args = new(actions.Block2Poly)
@@ -54,7 +54,7 @@ func getTestCasesFromJSON(jsonData string) (string, error) {
 			}
 			args.Execute()
 			fmt.Println(args)
-			result[key] = args
+			result[key] = map[string]interface{}{"coefficients": args.Result}
 
 		case "gfmul":
 			var args = new(actions.Gfmul)
@@ -63,7 +63,7 @@ func getTestCasesFromJSON(jsonData string) (string, error) {
 				continue
 			}
 			args.Execute()
-			result[key] = args
+			result[key] = map[string]interface{}{"product": args.Result}
 		}
 
 	}
