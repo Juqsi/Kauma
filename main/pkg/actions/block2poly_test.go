@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestBlock2Poly(t *testing.T) {
+func TestBlock2Poly_Execute(t *testing.T) {
 	testcases := []struct {
 		title    string
 		input    Block2Poly

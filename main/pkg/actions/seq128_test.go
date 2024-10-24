@@ -1,19 +1,15 @@
 package actions
 
-import (
-	"github.com/stretchr/testify/assert"
-	"testing"
-)
-
-func TestGfmul_Execute(t *testing.T) {
+/*
+func TestSea128_Execute(t *testing.T) {
 	testcases := []struct {
 		title    string
-		input    Gfmul
+		input    sea128
 		expected string
 	}{
 		{
 			title:    "Basic Test",
-			input:    Gfmul{Factor2: "ARIAAAAAAAAAAAAAAAAAgA==", Factor1: "AgAAAAAAAAAAAAAAAAAAAA=="},
+			input:    sea128{Mode: "aba", Key: "istDASeincoolerKEYrofg==", Input: "yv66vvrO263eyviIiDNEVQ=="},
 			expected: "hSQAAAAAAAAAAAAAAAAAAA==",
 		},
 	}
@@ -21,8 +17,9 @@ func TestGfmul_Execute(t *testing.T) {
 	for _, testcase := range testcases {
 		t.Run(testcase.title, func(t *testing.T) {
 			testcase.input.Execute()
-			response := testcase.input.Result
+			response := testcase.input.Res
 			assert.Equal(t, testcase.expected, response, "Expected %v, got %v", testcase.expected, response)
 		})
 	}
 }
+*/

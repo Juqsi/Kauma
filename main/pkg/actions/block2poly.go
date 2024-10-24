@@ -2,7 +2,6 @@ package actions
 
 import (
 	"Abgabe/main/pkg/utils"
-	"fmt"
 	"math/big"
 )
 
@@ -13,8 +12,6 @@ type Block2Poly struct {
 }
 
 func (b *Block2Poly) Execute() {
-	fmt.Println(b.Block)
-	fmt.Println(b)
 	b.Result = Number2Coefficients(utils.NewLongFromBase64(b.Block).BigInt())
 }
 
