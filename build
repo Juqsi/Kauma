@@ -1,0 +1,5 @@
+#!/bin/bash
+APP_NAME="kauma"
+go build -o $APP_NAME ./main
+
+
