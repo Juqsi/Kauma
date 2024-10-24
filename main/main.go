@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	tests := testcases.GetTestcases()
+	tests := testcases.RunTestcases()
 	fmt.Println(tests)
 }

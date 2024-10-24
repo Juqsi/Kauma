@@ -31,17 +31,18 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Install dependencies
-        run: |
-          go mod download
+        run: go mod download
 
-      - name: Run Go tests
-        run: |
-          go test ./...
+      - name: Run Go tests and generate coverage
+        run: go test -coverprofile=coverage.out ./...
 
       - uses: sonarsource/sonarqube-scan-action@v3
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_SCANNER_OPTS: >
+            -Dsonar.go.coverage.reportPaths=coverage.out
+            -Dsonar.coverage.exclusions=**/test/**,**/vendor/**
 
       - name: Check the Quality Gate
         if: github.event_name == 'pull_request' && github.base_ref == 'main'

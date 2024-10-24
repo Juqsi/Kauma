@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func GetTestcases() string {
+func RunTestcases() string {
 	argsWithProg := os.Args
 	if len(argsWithProg) != 2 {
 		panic("Wrong number of arguments")
