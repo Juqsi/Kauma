@@ -8,18 +8,18 @@ import (
 func TestFde_Execute(t *testing.T) {
 	testcases := []struct {
 		title    string
-		input    fde
+		input    Xex
 		expected string
 	}{
 		{
 			title: "Basic Test Encrypt",
-			input: fde{Mode: "encrypt", Key: "B1ygNO/CyRYIUYhTSgoUysX5Y/wWLi4UiWaVeloUWs0=",
+			input: Xex{Mode: "encrypt", Key: "B1ygNO/CyRYIUYhTSgoUysX5Y/wWLi4UiWaVeloUWs0=",
 				Tweak: "6VXORr+YYHrd2nVe0OlA+Q==", Input: "/aOg4jMocLkBLkDLgkHYtFKc2L9jjyd2WXSSyxXQikpMY9ZRnsJE76e9dW9olZIW"},
 			expected: "mHAVhRCKPAPx0BcufG5BZ4+/CbneMV/gRvqK5rtLe0OJgpDU5iT7z2P0R7gEeRDO",
 		},
 		{
 			title: "Basic Test Decrypt",
-			input: fde{Mode: "decrypt", Key: "B1ygNO/CyRYIUYhTSgoUysX5Y/wWLi4UiWaVeloUWs0=",
+			input: Xex{Mode: "decrypt", Key: "B1ygNO/CyRYIUYhTSgoUysX5Y/wWLi4UiWaVeloUWs0=",
 				Tweak: "6VXORr+YYHrd2nVe0OlA+Q==", Input: "lr/ItaYGFXCtHhdPndE65yg7u/GIdM9wscABiiFOUH2Sbyc2UFMlIRSMnZrYCW1a"},
 			expected: "SGV5IHdpZSBrcmFzcyBkYXMgZnVua3Rpb25pZXJ0IGphIG9mZmVuYmFyIGVjaHQu",
 		},

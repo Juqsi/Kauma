@@ -6,7 +6,7 @@ import (
 	"math/big"
 )
 
-type fde struct {
+type Xex struct {
 	Mode   string `json:"mode"`
 	Key    string `json:"key"`
 	Tweak  string `json:"tweak"`
@@ -14,7 +14,7 @@ type fde struct {
 	Result string `json:"result"`
 }
 
-func (f *fde) Execute() {
+func (f *Xex) Execute() {
 	fullKey := utils.NewLongFromBase64(f.Key).Int.Bytes()
 	if len(fullKey) != 32 {
 		f.Result = "Invalid key"

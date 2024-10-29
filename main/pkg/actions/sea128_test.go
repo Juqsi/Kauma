@@ -8,16 +8,16 @@ import (
 func TestSea128_Execute(t *testing.T) {
 	testcases := []struct {
 		title    string
-		input    sea128
+		input    Sea128
 		expected string
 	}{
 		{
 			title:    "Basic Test Encode",
-			input:    sea128{Mode: "encrypt", Key: "istDASeincoolerKEYrofg==", Input: "yv66vvrO263eyviIiDNEVQ=="},
+			input:    Sea128{Mode: "encrypt", Key: "istDASeincoolerKEYrofg==", Input: "yv66vvrO263eyviIiDNEVQ=="},
 			expected: "D5FDo3iVBoBN9gVi9/MSKQ==",
 		}, {
 			title:    "Basic Test Decode",
-			input:    sea128{Mode: "decrypt", Key: "istDASeincoolerKEYrofg==", Input: "D5FDo3iVBoBN9gVi9/MSKQ=="},
+			input:    Sea128{Mode: "decrypt", Key: "istDASeincoolerKEYrofg==", Input: "D5FDo3iVBoBN9gVi9/MSKQ=="},
 			expected: "yv66vvrO263eyviIiDNEVQ==",
 		},
 	}

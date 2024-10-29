@@ -34,7 +34,22 @@ func runTestcases(testCases models.TestcaseFile) (string, error) {
 			}
 			args.Execute()
 			result[key] = map[string]interface{}{"product": args.Result}
+		case "sea128":
+			var args = new(actions.Sea128)
+			if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
+				continue
+			}
+			args.Execute()
+			result[key] = map[string]interface{}{"output": args.Result}
+		case "xex":
+			var args = new(actions.Xex)
+			if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
+				continue
+			}
+			args.Execute()
+			result[key] = map[string]interface{}{"output": args.Result}
 		}
+
 	}
 	a, _ := json.Marshal(result)
 	return string(a), nil

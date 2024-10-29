@@ -6,14 +6,14 @@ import (
 	"math/big"
 )
 
-type sea128 struct {
+type Sea128 struct {
 	Mode   string `json:"Mode"`
 	Key    string `json:"Key"`
 	Input  string `json:"Input"`
 	Result string
 }
 
-func (s *sea128) Execute() {
+func (s *Sea128) Execute() {
 	var a *big.Int
 	var err error
 
