@@ -15,11 +15,18 @@ func NewLongFromBigInt(b *big.Int) *Long {
 	return long
 }
 
-func NewLongFromBase64(s string) *Long {
+func NewLongFromLittleEndianInBase64(s string) *Long {
 	byteSlice, _ := base64.StdEncoding.DecodeString(s)
 	number := new(Long)
 	number.SetBytes(byteSlice)
 	number.SetBytes(number.GetLittleEndian())
+	return number
+}
+
+func NewLongFromBase64(s string) *Long {
+	byteSlice, _ := base64.StdEncoding.DecodeString(s)
+	number := new(Long)
+	number.SetBytes(byteSlice)
 	return number
 }
 
@@ -31,7 +38,7 @@ func (number *Long) GetLittleEndian() []byte {
 	return byteSlice
 }
 
-func (number *Long) GetBase64(minLenght int) string {
+func (number *Long) GetLittleEndianInBase64(minLenght int) string {
 	numberBytes := number.GetLittleEndian()
 	for i := len(numberBytes); i < minLenght; i++ {
 		numberBytes = append(numberBytes, 0)
@@ -39,6 +46,10 @@ func (number *Long) GetBase64(minLenght int) string {
 	return base64.StdEncoding.EncodeToString(numberBytes)
 }
 
-func (number *Long) BigInt() *big.Int {
-	return new(big.Int).SetBytes(number.Bytes())
+func (number *Long) GetBase64(minLenght int) string {
+	numberBytes := number.Int.Bytes()
+	for i := len(numberBytes); i < minLenght; i++ {
+		numberBytes = append(numberBytes, 0)
+	}
+	return base64.StdEncoding.EncodeToString(numberBytes)
 }

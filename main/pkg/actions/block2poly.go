@@ -12,10 +12,10 @@ type Block2Poly struct {
 }
 
 func (b *Block2Poly) Execute() {
-	b.Result = Number2Coefficients(utils.NewLongFromBase64(b.Block).BigInt())
+	b.Result = Number2Coefficients(utils.NewLongFromLittleEndianInBase64(b.Block).Int)
 }
 
-func Number2Coefficients(number *big.Int) (ret []uint) {
+func Number2Coefficients(number big.Int) (ret []uint) {
 	bitLen := number.BitLen()
 	for i := 0; i < bitLen; i++ {
 		if number.Bit(i) == 1 {

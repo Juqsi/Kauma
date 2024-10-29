@@ -13,8 +13,8 @@ type Gfmul struct {
 }
 
 func (g *Gfmul) Execute() {
-	result := GfmulBigInt(utils.NewLongFromBase64(g.Factor1).BigInt(), utils.NewLongFromBase64(g.Factor2).BigInt(), Coeff2Number([]uint{128, 7, 2, 1, 0}))
-	g.Result = utils.NewLongFromBigInt(result).GetBase64(16)
+	result := GfmulBigInt(&utils.NewLongFromLittleEndianInBase64(g.Factor1).Int, &utils.NewLongFromLittleEndianInBase64(g.Factor2).Int, Coeff2Number([]uint{128, 7, 2, 1, 0}))
+	g.Result = utils.NewLongFromBigInt(result).GetLittleEndianInBase64(16)
 }
 
 func GfmulBigInt(factor1, factor2, reduce *big.Int) *big.Int {
