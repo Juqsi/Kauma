@@ -23,21 +23,32 @@ func (s *sea128) Execute() {
 	key := &utils.NewLongFromBase64(s.Key).Int
 
 	if s.Mode == "encrypt" {
-		a, err = EncryptMessage(key, message, seaConstant)
+		a, err = Sea128Encrypt(key, message, seaConstant)
 	} else if s.Mode == "decrypt" {
-		a, err = DecryptMessage(key, message, seaConstant)
+		a, err = Sea128Decrypt(key, message, seaConstant)
 	} else {
-		panic("Invalid Mode")
+		s.Result = "Invalid mode"
+		return
 	}
 
 	if err != nil {
-		panic(err)
+		s.Result = err.Error()
+		return
 	}
-
 	s.Result = utils.NewLongFromBigInt(a).GetBase64(16)
 }
 
-func EncryptMessage(key, message, seaConstant *big.Int) (*big.Int, error) {
+func Sea128Encrypt(key, message, seaConstant *big.Int) (*big.Int, error) {
+	cipher, err := AesEncrypt(key, message)
+	if err != nil {
+		return &big.Int{}, err
+	}
+	cipher.Xor(cipher, seaConstant)
+
+	return cipher, nil
+}
+
+func AesEncrypt(key, message *big.Int) (*big.Int, error) {
 	block, err := aes.NewCipher(key.Bytes())
 	if err != nil {
 		return &big.Int{}, err
@@ -46,15 +57,20 @@ func EncryptMessage(key, message, seaConstant *big.Int) (*big.Int, error) {
 	ciphertext := make([]byte, aes.BlockSize)
 	block.Encrypt(ciphertext, message.Bytes())
 
-	cipher := new(big.Int).SetBytes(ciphertext)
-	cipher.Xor(cipher, seaConstant)
-
-	return cipher, nil
+	return new(big.Int).SetBytes(ciphertext), nil
 }
 
-func DecryptMessage(key, ciphertext, seaConstant *big.Int) (*big.Int, error) {
+func Sea128Decrypt(key, ciphertext, seaConstant *big.Int) (*big.Int, error) {
 	ciphertext.Xor(ciphertext, seaConstant)
+	plaintext, err := AesDecrypt(key, ciphertext)
+	if err != nil {
+		return &big.Int{}, err
+	}
 
+	return plaintext, nil
+}
+
+func AesDecrypt(key, ciphertext *big.Int) (*big.Int, error) {
 	block, err := aes.NewCipher(key.Bytes())
 	if err != nil {
 		return &big.Int{}, err
