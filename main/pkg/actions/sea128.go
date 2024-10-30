@@ -35,7 +35,7 @@ func (s *Sea128) Execute() {
 		s.Result = err.Error()
 		return
 	}
-	s.Result = utils.NewLongFromBigInt(a).GetBase64(16)
+	s.Result = utils.NewLongFromBigInt(*a).GetBase64(16)
 }
 
 func Sea128Encrypt(key, message, seaConstant *big.Int) (*big.Int, error) {
@@ -49,12 +49,12 @@ func Sea128Encrypt(key, message, seaConstant *big.Int) (*big.Int, error) {
 }
 
 func AesEncrypt(key, message *big.Int) (*big.Int, error) {
-	block, err := aes.NewCipher(utils.NewLongFromBigInt(key).Bytes(aes.BlockSize))
+	block, err := aes.NewCipher(utils.NewLongFromBigInt(*key).Bytes(aes.BlockSize))
 	if err != nil {
 		return &big.Int{}, err
 	}
 
-	mes := utils.NewLongFromBigInt(message).Bytes(aes.BlockSize)
+	mes := utils.NewLongFromBigInt(*message).Bytes(aes.BlockSize)
 	ciphertext := make([]byte, aes.BlockSize)
 	block.Encrypt(ciphertext, mes)
 
@@ -72,12 +72,12 @@ func Sea128Decrypt(key, ciphertext, seaConstant *big.Int) (*big.Int, error) {
 }
 
 func AesDecrypt(key, ciphertext *big.Int) (*big.Int, error) {
-	block, err := aes.NewCipher(utils.NewLongFromBigInt(key).Bytes(aes.BlockSize))
+	block, err := aes.NewCipher(utils.NewLongFromBigInt(*key).Bytes(aes.BlockSize))
 	if err != nil {
 		return &big.Int{}, err
 	}
 
-	cip := utils.NewLongFromBigInt(ciphertext).Bytes(aes.BlockSize)
+	cip := utils.NewLongFromBigInt(*ciphertext).Bytes(aes.BlockSize)
 	plaintext := make([]byte, aes.BlockSize)
 	block.Decrypt(plaintext, cip)
 

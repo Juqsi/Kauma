@@ -13,24 +13,27 @@ type Gfmul struct {
 }
 
 func (g *Gfmul) Execute() {
-	result := GfmulBigInt(&utils.NewLongFromLittleEndianInBase64(g.Factor1).Int, &utils.NewLongFromLittleEndianInBase64(g.Factor2).Int, Coeff2Number([]uint{128, 7, 2, 1, 0}))
-	g.Result = utils.NewLongFromBigInt(result).GetLittleEndianInBase64(16)
+	if g.Semantic == "xex" {
+		result := GfmulBigInt(utils.NewLongFromLittleEndianInBase64(g.Factor1).Int, utils.NewLongFromLittleEndianInBase64(g.Factor2).Int, Coeff2Number([]uint{128, 7, 2, 1, 0}))
+		g.Result = utils.NewLongFromBigInt(result).GetLittleEndianInBase64(16)
+		return
+	}
+	g.Result = "Semantic isnt valid"
+	return
 }
 
-func GfmulBigInt(factor1, factor2, reduce *big.Int) *big.Int {
+func GfmulBigInt(factor1, factor2, reduce big.Int) big.Int {
 	result := big.NewInt(0)
 	tmpFactor1 := new(big.Int)
 	tmpFactor2 := new(big.Int)
 
 	if factor1.BitLen() < factor2.BitLen() {
-		tmpFactor1.Set(factor2)
-		tmpFactor2.Set(factor1)
+		tmpFactor1.Set(&factor2)
+		tmpFactor2.Set(&factor1)
 	} else {
-		tmpFactor1.Set(factor1)
-		tmpFactor2.Set(factor2)
+		tmpFactor1.Set(&factor1)
+		tmpFactor2.Set(&factor2)
 	}
-
-	tmpReduce := new(big.Int).Set(reduce)
 
 	for tmpFactor2.BitLen() > 0 {
 		if tmpFactor2.Bit(0) == 1 {
@@ -40,10 +43,10 @@ func GfmulBigInt(factor1, factor2, reduce *big.Int) *big.Int {
 		tmpFactor1.Lsh(tmpFactor1, 1)
 
 		if tmpFactor1.BitLen() >= reduce.BitLen() {
-			tmpFactor1.Xor(tmpFactor1, tmpReduce)
+			tmpFactor1.Xor(tmpFactor1, &reduce)
 		}
 
 		tmpFactor2.Rsh(tmpFactor2, 1)
 	}
-	return result
+	return *result
 }

@@ -21,6 +21,11 @@ func TestBlock2Poly_Execute(t *testing.T) {
 			expected: []uint{12, 127, 128, 0, 9},
 		},
 		{
+			title:    "Basic Test 2",
+			input:    Block2Poly{Block: "ARIAAAAAAAAAAAAAAAAAgAE="},
+			expected: []uint{12, 127, 128, 0, 9},
+		},
+		{
 			title:    "Empty Input",
 			input:    Block2Poly{Block: ""},
 			expected: []uint{},

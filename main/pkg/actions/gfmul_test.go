@@ -13,18 +13,23 @@ func TestGfmul_Execute(t *testing.T) {
 	}{
 		{
 			title:    "Basic Test",
-			input:    Gfmul{Factor2: "ARIAAAAAAAAAAAAAAAAAgA==", Factor1: "AgAAAAAAAAAAAAAAAAAAAA=="},
+			input:    Gfmul{Factor2: "ARIAAAAAAAAAAAAAAAAAgA==", Factor1: "AgAAAAAAAAAAAAAAAAAAAA==", Semantic: "xex"},
 			expected: "hSQAAAAAAAAAAAAAAAAAAA==",
 		},
 		{
 			title:    "Empty Input",
-			input:    Gfmul{Factor2: "ARIAAAAAAAAAAAAAAAAAgA==", Factor1: ""},
+			input:    Gfmul{Factor2: "ARIAAAAAAAAAAAAAAAAAgA==", Factor1: "", Semantic: "xex"},
 			expected: "AAAAAAAAAAAAAAAAAAAAAA==",
 		},
 		{
-			title:    "Empty Input",
-			input:    Gfmul{Factor2: "ARIAAAAAAAAAAAAAAAAAgA==", Factor1: "AAAAAAAAAAAAAAAAAAAAAA=="},
+			title:    "Zero Multiplication",
+			input:    Gfmul{Factor2: "ARIAAAAAAAAAAAAAAAAAgA==", Factor1: "AAAAAAAAAAAAAAAAAAAAAA==", Semantic: "xex"},
 			expected: "AAAAAAAAAAAAAAAAAAAAAA==",
+		},
+		{
+			title:    "All 1",
+			input:    Gfmul{Factor2: "/////////////////////w==", Factor1: "/////////////////////w==", Semantic: "xex"},
+			expected: "L0BVVVVVVVVVVVVVVVVVVQ==",
 		},
 	}
 

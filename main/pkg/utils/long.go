@@ -9,9 +9,9 @@ type Long struct {
 	big.Int
 }
 
-func NewLongFromBigInt(b *big.Int) *Long {
+func NewLongFromBigInt(b big.Int) *Long {
 	long := new(Long)
-	long.Set(b)
+	long.Set(&b)
 	return long
 }
 
