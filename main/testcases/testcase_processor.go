@@ -7,6 +7,7 @@ import (
 )
 
 func runTestcases(testCases models.TestcaseFile) (string, error) {
+
 	result := make(map[string]map[string]interface{})
 
 	for key, testCase := range testCases.Testcases {
@@ -51,6 +52,9 @@ func runTestcases(testCases models.TestcaseFile) (string, error) {
 		}
 
 	}
-	a, _ := json.Marshal(result)
+	res := struct {
+		Response map[string]map[string]interface{} `json:"responses"`
+	}{Response: result}
+	a, _ := json.Marshal(res)
 	return string(a), nil
 }
