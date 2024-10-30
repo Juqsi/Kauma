@@ -1,12 +1,52 @@
 #!/bin/bash
 
+# Set script location as working dir
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+echo "Changing working directory to $SCRIPT_DIR"
 cd "$SCRIPT_DIR" || exit
 
+# Ensure Go is installed
+if ! [ -x "$(command -v go)" ]; then
+  echo "Go is not installed. Installing Go..."
+
+   # Check if Go tarball is already downloaded
+    if [ ! -f "go1.23.2.linux-amd64.tar.gz" ]; then
+      echo "Downloading Go tarball..."
+      apt update && apt install -y wget
+      wget https://go.dev/dl/go1.23.2.linux-amd64.tar.gz
+    else
+      echo "Go tarball already exists, skipping download."
+    fi
+
+  rm -rf /usr/local/go && tar -C /usr/local -xzf go1.23.2.linux-amd64.tar.gz
+  rm go1.23.2.linux-amd64.tar.gz
+
+    # Add Go to PATH in the user's .profile
+    if ! grep -q "/usr/local/go/bin" "$HOME/.profile"; then
+      echo "Adding Go to PATH in ~/.profile"
+      echo "export PATH=$PATH:/usr/local/go/bin" >> "$HOME/.profile"
+    fi
+
+    # Load the new PATH
+    export PATH=$PATH:/usr/local/go/bin
+
+  echo "Go installed successfully."
+else
+  echo "Go is already installed."
+fi
+
+# Verify Go installation
+go version
+
+# Build the Go project
+echo "Building the Go project..."
 mkdir -p bin
 go build -o bin/kauma main/main.go
+echo "Build complete. The binary is located at bin/kauma"
 
+# Copy binary to relevant places
 mkdir -p /dut
 cp bin/kauma /dut/kauma
 cp bin/kauma ./kauma
 cp "bin/kauma" "$SCRIPT_DIR/kauma"
+echo "Binary is also available at /dut/kauma and $SCRIPT_DIR/kauma"
