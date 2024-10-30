@@ -4,7 +4,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPT_DIR" || exit
 
 mkdir -p bin
-go build -o bin/kauma cmd/kauma/kauma.go
+go build -o bin/kauma main/main.go
 
 mkdir -p /dut
 cp bin/kauma /dut/kauma
