@@ -31,8 +31,8 @@ func NewLongFromBase64(s string) *Long {
 }
 
 func (number *Long) GetLittleEndian() []byte {
-	byteSlice := make([]byte, len(number.Bytes()))
-	for i, value := range number.Bytes() {
+	byteSlice := make([]byte, len(number.Int.Bytes()))
+	for i, value := range number.Int.Bytes() {
 		byteSlice[len(byteSlice)-1-i] = value
 	}
 	return byteSlice
@@ -52,4 +52,9 @@ func (number *Long) GetBase64(minLenght int) string {
 		numberBytes = append(numberBytes, 0)
 	}
 	return base64.StdEncoding.EncodeToString(numberBytes)
+}
+
+func (number *Long) Bytes(minLen int) []byte {
+	return append(make([]byte, minLen-len(number.Int.Bytes())), number.Int.Bytes()...)
+
 }

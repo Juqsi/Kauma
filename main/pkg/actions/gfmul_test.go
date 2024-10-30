@@ -16,6 +16,16 @@ func TestGfmul_Execute(t *testing.T) {
 			input:    Gfmul{Factor2: "ARIAAAAAAAAAAAAAAAAAgA==", Factor1: "AgAAAAAAAAAAAAAAAAAAAA=="},
 			expected: "hSQAAAAAAAAAAAAAAAAAAA==",
 		},
+		{
+			title:    "Empty Input",
+			input:    Gfmul{Factor2: "ARIAAAAAAAAAAAAAAAAAgA==", Factor1: ""},
+			expected: "AAAAAAAAAAAAAAAAAAAAAA==",
+		},
+		{
+			title:    "Empty Input",
+			input:    Gfmul{Factor2: "ARIAAAAAAAAAAAAAAAAAgA==", Factor1: "AAAAAAAAAAAAAAAAAAAAAA=="},
+			expected: "AAAAAAAAAAAAAAAAAAAAAA==",
+		},
 	}
 
 	for _, testcase := range testcases {

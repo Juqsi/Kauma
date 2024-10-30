@@ -2,6 +2,7 @@ package actions
 
 import (
 	"Abgabe/main/pkg/utils"
+	"crypto/aes"
 	"encoding/base64"
 	"math/big"
 )
@@ -63,7 +64,7 @@ func FdeXexEncrypt(key, tweak, seaConst *big.Int, message []byte) (cipher []byte
 		}
 		//Step4
 		encryptedBlock.Xor(encryptedBlock, tweak)
-		cipher = append(cipher, encryptedBlock.Bytes()...)
+		cipher = append(cipher, utils.NewLongFromBigInt(encryptedBlock).Bytes(aes.BlockSize)...)
 		//Step 5
 		tweak = GfmulBigInt(new(big.Int).SetBytes(utils.NewLongFromBigInt(tweak).GetLittleEndian()), a, Coeff2Number([]uint{128, 7, 2, 1, 0}))
 		tweak.SetBytes(utils.NewLongFromBigInt(tweak).GetLittleEndian())
@@ -85,7 +86,7 @@ func FdeXexDecrypt(key, tweak, seaConst *big.Int, cipher []byte) (text []byte, e
 		}
 		//Step 4
 		decryptedBlock.Xor(decryptedBlock, tweak)
-		text = append(text, decryptedBlock.Bytes()...)
+		text = append(text, utils.NewLongFromBigInt(decryptedBlock).Bytes(aes.BlockSize)...)
 
 		//Step 5
 		tweak = GfmulBigInt(new(big.Int).SetBytes(utils.NewLongFromBigInt(tweak).GetLittleEndian()), a, Coeff2Number([]uint{128, 7, 2, 1, 0}))

@@ -23,6 +23,12 @@ func TestFde_Execute(t *testing.T) {
 				Tweak: "6VXORr+YYHrd2nVe0OlA+Q==", Input: "lr/ItaYGFXCtHhdPndE65yg7u/GIdM9wscABiiFOUH2Sbyc2UFMlIRSMnZrYCW1a"},
 			expected: "SGV5IHdpZSBrcmFzcyBkYXMgZnVua3Rpb25pZXJ0IGphIG9mZmVuYmFyIGVjaHQu",
 		},
+		{
+			title: "Empty Input Encrypt",
+			input: Xex{Mode: "encrypt", Key: "B1ygNO/CyRYIUYhTSgoUysX5Y/wWLi4UiWaVeloUWs0=",
+				Tweak: "6VXORr+YYHrd2nVe0OlA+Q==", Input: ""},
+			expected: "",
+		},
 	}
 
 	for _, testcase := range testcases {
