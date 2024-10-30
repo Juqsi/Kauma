@@ -77,8 +77,9 @@ func AesDecrypt(key, ciphertext *big.Int) (*big.Int, error) {
 		return &big.Int{}, err
 	}
 
+	cip := append(make([]byte, aes.BlockSize-len(ciphertext.Bytes())), ciphertext.Bytes()...)
 	plaintext := make([]byte, aes.BlockSize)
-	block.Decrypt(plaintext, ciphertext.Bytes())
+	block.Decrypt(plaintext, cip)
 
 	return new(big.Int).SetBytes(plaintext), nil
 }

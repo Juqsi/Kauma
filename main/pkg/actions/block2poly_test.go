@@ -20,6 +20,15 @@ func TestBlock2Poly_Execute(t *testing.T) {
 			input:    Block2Poly{Block: "ARIAAAAAAAAAAAAAAAAAgAE="},
 			expected: []uint{12, 127, 128, 0, 9},
 		},
+		{
+			title:    "Empty Input",
+			input:    Block2Poly{Block: ""},
+			expected: []uint{},
+		}, {
+			title:    "Zero Input",
+			input:    Block2Poly{Block: "AAAAAAAAAAAAAAAAAAAAAA=="},
+			expected: []uint{},
+		},
 	}
 
 	for _, testcase := range testcases {

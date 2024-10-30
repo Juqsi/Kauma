@@ -21,6 +21,11 @@ func TestPoly2Block_Execute(t *testing.T) {
 			input:    Poly2Block{Coefficients: []uint{128, 128, 12, 127, 0, 9}},
 			expected: "ARIAAAAAAAAAAAAAAAAAgA==",
 		},
+		{
+			title:    "Empty Input",
+			input:    Poly2Block{Coefficients: []uint{}},
+			expected: "AAAAAAAAAAAAAAAAAAAAAA==",
+		},
 	}
 
 	for _, testcase := range testcases {

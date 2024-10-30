@@ -12,7 +12,7 @@ type Poly2Block struct {
 }
 
 func (p *Poly2Block) Execute() {
-	p.Result = utils.NewLongFromBigInt(Coeff2Number(p.Coefficients)).GetLittleEndianInBase64(-1)
+	p.Result = utils.NewLongFromBigInt(Coeff2Number(p.Coefficients)).GetLittleEndianInBase64(16)
 }
 
 func Coeff2Number(coefficients []uint) *big.Int {
