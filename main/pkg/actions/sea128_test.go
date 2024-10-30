@@ -20,6 +20,19 @@ func TestSea128_Execute(t *testing.T) {
 			input:    Sea128{Mode: "decrypt", Key: "istDASeincoolerKEYrofg==", Input: "D5FDo3iVBoBN9gVi9/MSKQ=="},
 			expected: "yv66vvrO263eyviIiDNEVQ==",
 		},
+		{
+			title:    "Empty Input Encode",
+			input:    Sea128{Mode: "encrypt", Key: "istDASeincoolerKEYrofg==", Input: ""},
+			expected: "/35bimzmC3HOC0HFLpjkCw==",
+		}, {
+			title:    "Empty Input Decode",
+			input:    Sea128{Mode: "decrypt", Key: "istDASeincoolerKEYrofg==", Input: ""},
+			expected: "rCGMWXjfwGVQU4cx1C2npw==",
+		}, {
+			title:    "Invalid Mode",
+			input:    Sea128{Mode: "invalid", Key: "istDASeincoolerKEYrofg==", Input: "yv66vvrO263eyviIiDNEVQ=="},
+			expected: "Invalid mode",
+		},
 	}
 
 	for _, testcase := range testcases {

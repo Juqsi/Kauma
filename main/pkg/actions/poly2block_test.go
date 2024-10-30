@@ -16,6 +16,11 @@ func TestPoly2Block_Execute(t *testing.T) {
 			input:    Poly2Block{Coefficients: []uint{12, 127, 0, 9}},
 			expected: "ARIAAAAAAAAAAAAAAAAAgA==",
 		},
+		{
+			title:    "double Inout coeff Test",
+			input:    Poly2Block{Coefficients: []uint{128, 128, 12, 127, 0, 9}},
+			expected: "ARIAAAAAAAAAAAAAAAAAgA==",
+		},
 	}
 
 	for _, testcase := range testcases {

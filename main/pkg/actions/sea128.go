@@ -54,8 +54,9 @@ func AesEncrypt(key, message *big.Int) (*big.Int, error) {
 		return &big.Int{}, err
 	}
 
+	mes := append(make([]byte, aes.BlockSize-len(message.Bytes())), message.Bytes()...)
 	ciphertext := make([]byte, aes.BlockSize)
-	block.Encrypt(ciphertext, message.Bytes())
+	block.Encrypt(ciphertext, mes)
 
 	return new(big.Int).SetBytes(ciphertext), nil
 }
