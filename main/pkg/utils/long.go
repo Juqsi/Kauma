@@ -47,7 +47,7 @@ func (number *Long) GetLittleEndianInBase64(length int) string {
 }
 
 func (number *Long) GetBase64(length int) string {
-	numberBytes := number.Int.Bytes()
+	numberBytes := number.Bytes(length)
 	for i := len(numberBytes); i < length; i++ {
 		numberBytes = append(numberBytes, 0)
 	}

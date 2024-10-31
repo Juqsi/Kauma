@@ -4,6 +4,9 @@ import (
 	"Abgabe/main/pkg/actions"
 	"Abgabe/main/pkg/models"
 	"encoding/json"
+	"fmt"
+	"os"
+	"runtime/debug"
 )
 
 func runTestcases(testCases models.TestcaseFile) (string, error) {
@@ -11,47 +14,58 @@ func runTestcases(testCases models.TestcaseFile) (string, error) {
 	result := make(map[string]map[string]interface{})
 
 	for key, testCase := range testCases.Testcases {
-		switch testCase.Action {
-		case "poly2block":
-			var args = new(actions.Poly2Block)
-			if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
-				continue
-			}
-			args.Execute()
-			result[key] = map[string]interface{}{"block": args.Result}
+		func(key string, testCase models.Testcase) {
+			defer func() {
+				if r := recover(); r != nil {
+					fmt.Fprintf(os.Stderr, "Error in testcase %s: %v\n", testCase.Arguments, r)
+					fmt.Fprintf(os.Stderr, "Stacktrace:\n%s\n", debug.Stack())
+				}
+			}()
 
-		case "block2poly":
-			var args = new(actions.Block2Poly)
-			if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
-				continue
-			}
-			args.Execute()
-			result[key] = map[string]interface{}{"coefficients": args.Result}
+			switch testCase.Action {
+			case "poly2block":
+				var args = new(actions.Poly2Block)
+				if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
+					return
+				}
+				args.Execute()
+				result[key] = map[string]interface{}{"block": args.Result}
 
-		case "gfmul":
-			var args = new(actions.Gfmul)
-			if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
-				continue
-			}
-			args.Execute()
-			result[key] = map[string]interface{}{"product": args.Result}
-		case "sea128":
-			var args = new(actions.Sea128)
-			if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
-				continue
-			}
-			args.Execute()
-			result[key] = map[string]interface{}{"output": args.Result}
-		case "xex":
-			var args = new(actions.Xex)
-			if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
-				continue
-			}
-			args.Execute()
-			result[key] = map[string]interface{}{"output": args.Result}
-		}
+			case "block2poly":
+				var args = new(actions.Block2Poly)
+				if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
+					return
+				}
+				args.Execute()
+				result[key] = map[string]interface{}{"coefficients": args.Result}
 
+			case "gfmul":
+				var args = new(actions.Gfmul)
+				if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
+					return
+				}
+				args.Execute()
+				result[key] = map[string]interface{}{"product": args.Result}
+
+			case "sea128":
+				var args = new(actions.Sea128)
+				if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
+					return
+				}
+				args.Execute()
+				result[key] = map[string]interface{}{"output": args.Result}
+
+			case "xex":
+				var args = new(actions.Xex)
+				if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
+					return
+				}
+				args.Execute()
+				result[key] = map[string]interface{}{"output": args.Result}
+			}
+		}(key, testCase)
 	}
+
 	res := struct {
 		Response map[string]map[string]interface{} `json:"responses"`
 	}{Response: result}

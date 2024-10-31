@@ -21,6 +21,13 @@
             "block": "AAAAAAAAAAAAAAAAAAAAAA=="
             }
         },
+        "b956d760-023d-4b10-bad2-15d2b6da23fe": {
+            "action": "block2poly",
+            "arguments": {
+            "semantic": "xex",
+            "block": "ARIAAAAAAAAAAAAAAAAAgAE="
+            }
+        },
         "b856d760-023d-4b00-bad2-15d2b6da24fe": {
             "action": "gfmul",
             "arguments": {
@@ -43,6 +50,46 @@
             "mode": "decrypt",
             "key": "istDASeincoolerKEYrofg==",
             "input": "D5FDo3iVBoBN9gVi9/MSKQ=="
+            }
+        },
+        "b956d760-023d-4b00-bad4-15d2b6da24fe": {
+            "action": "sea128",
+            "arguments": {
+            "mode": "encrypt",
+            "key": "istDASeincoolerKEYrofg==",
+            "input": "AAAAAAAAAAAAAAAAAAAAAA=="
+            }
+        },
+        "b956d760-023d-4b00-bad5-15d2b6da24fe": {
+            "action": "sea128",
+            "arguments": {
+            "mode": "decrypt",
+            "key": "istDASeincoolerKEYrofg==",
+            "input": "AAAAAAAAAAAAAAAAAAAAAA=="
+            }
+        },
+        "b956d860-023d-4b00-bad4-15d2b6da24fe": {
+            "action": "sea128",
+            "arguments": {
+            "mode": "encrypt",
+            "key": "istDASeincoolerKEYrofg==",
+            "input": ""
+            }
+        },
+        "b956d960-023d-4b00-bad5-15d2b6da24fe": {
+            "action": "sea128",
+            "arguments": {
+            "mode": "decrypt",
+            "key": "istDASeincoolerKEYrofg==",
+            "input": ""
+            }
+        },
+        "b956d970-023d-4b00-bad5-15d2b6da24fe": {
+            "action": "sea128",
+            "arguments": {
+            "mode": "decrypt",
+            "key": "vyG55UYdcvvBSQ75h9R2HQ==",
+            "input": "h4nTU4jnW2SW+kt74Pc0Ow=="
             }
         },
         "b856d760-023d-4b00-bad3-15d2b6da24fe": {

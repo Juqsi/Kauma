@@ -4,7 +4,9 @@ import (
 	"Abgabe/main/pkg/utils"
 	"crypto/aes"
 	"encoding/base64"
+	"fmt"
 	"math/big"
+	"os"
 )
 
 type Xex struct {
@@ -21,14 +23,14 @@ func (f *Xex) Execute() {
 		f.Result = "Invalid key"
 		return
 	}
-	key1 := new(big.Int).SetBytes(fullKey[:16])
-	key2 := new(big.Int).SetBytes(fullKey[16:])
+	key1 := *new(big.Int).SetBytes(fullKey[:16])
+	key2 := *new(big.Int).SetBytes(fullKey[16:])
 
 	seaConst, _ := new(big.Int).SetString("c0ffeec0ffeec0ffeec0ffeec0ffee11", 16)
 
-	tweak := &utils.NewLongFromBase64(f.Tweak).Int
+	tweak := utils.NewLongFromBase64(f.Tweak).Int
 	//Step 1
-	encryptedTweak, err := Sea128Encrypt(key2, tweak, seaConst)
+	encryptedTweak, err := Sea128Encrypt(key2, tweak, *seaConst)
 	if err != nil {
 		f.Result = "tweak encryption error"
 		return
@@ -37,14 +39,16 @@ func (f *Xex) Execute() {
 	var text []byte
 	input, err := base64.StdEncoding.DecodeString(f.Input)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %+v, %s\n", *f, err.Error())
 		f.Result = "Invalid input"
 		return
 	}
 	if f.Mode == "encrypt" {
-		text, err = FdeXexEncrypt(*key1, *encryptedTweak, *seaConst, input)
+		text, err = FdeXexEncrypt(key1, encryptedTweak, *seaConst, input)
 	} else if f.Mode == "decrypt" {
-		text, err = FdeXexDecrypt(*key1, *encryptedTweak, *seaConst, input)
+		text, err = FdeXexDecrypt(key1, encryptedTweak, *seaConst, input)
 	} else {
+		fmt.Fprintf(os.Stderr, "Error: %+v, %s\n", *f, err.Error())
 		f.Result = "Invalid mode"
 		return
 	}
@@ -56,15 +60,15 @@ func FdeXexEncrypt(key, tweak, seaConst big.Int, message []byte) (cipher []byte,
 	a := Coeff2Number([]uint{1})
 	for _, block := range blocks {
 		//Step 2
-		block.Xor(block, &tweak)
+		block.Xor(&block, &tweak)
 		//Step 3
-		encryptedBlock, err := Sea128Encrypt(&key, block, &seaConst)
+		encryptedBlock, err := Sea128Encrypt(key, block, seaConst)
 		if err != nil {
 			return cipher, err
 		}
 		//Step4
-		encryptedBlock.Xor(encryptedBlock, &tweak)
-		cipher = append(cipher, utils.NewLongFromBigInt(*encryptedBlock).Bytes(aes.BlockSize)...)
+		encryptedBlock.Xor(&encryptedBlock, &tweak)
+		cipher = append(cipher, utils.NewLongFromBigInt(encryptedBlock).Bytes(aes.BlockSize)...)
 		//Step 5
 		tweak = GfmulBigInt(*new(big.Int).SetBytes(utils.NewLongFromBigInt(tweak).GetLittleEndian()), a, Coeff2Number([]uint{128, 7, 2, 1, 0}))
 		tweak.SetBytes(utils.NewLongFromBigInt(tweak).GetLittleEndian())
@@ -77,16 +81,16 @@ func FdeXexDecrypt(key, tweak, seaConst big.Int, cipher []byte) (text []byte, er
 	a := Coeff2Number([]uint{1})
 	for _, block := range blocks {
 		//Step 2
-		block.Xor(block, &tweak)
+		block.Xor(&block, &tweak)
 
 		//Step 3
-		decryptedBlock, err := Sea128Decrypt(&key, block, &seaConst)
+		decryptedBlock, err := Sea128Decrypt(key, block, seaConst)
 		if err != nil {
 			return text, err
 		}
 		//Step 4
-		decryptedBlock.Xor(decryptedBlock, &tweak)
-		text = append(text, utils.NewLongFromBigInt(*decryptedBlock).Bytes(aes.BlockSize)...)
+		decryptedBlock.Xor(&decryptedBlock, &tweak)
+		text = append(text, utils.NewLongFromBigInt(decryptedBlock).Bytes(aes.BlockSize)...)
 
 		//Step 5
 		tweak = GfmulBigInt(*new(big.Int).SetBytes(utils.NewLongFromBigInt(tweak).GetLittleEndian()), a, Coeff2Number([]uint{128, 7, 2, 1, 0}))
@@ -95,10 +99,10 @@ func FdeXexDecrypt(key, tweak, seaConst big.Int, cipher []byte) (text []byte, er
 	return text, err
 }
 
-func getBlocks(message []byte, size int) []*big.Int {
-	blocks := *new([]*big.Int)
+func getBlocks(message []byte, size int) []big.Int {
+	blocks := *new([]big.Int)
 	for len(message) > 0 {
-		blocks = append(blocks, new(big.Int).SetBytes(message[:size]))
+		blocks = append(blocks, *new(big.Int).SetBytes(message[:size]))
 		message = message[size:]
 	}
 	return blocks
