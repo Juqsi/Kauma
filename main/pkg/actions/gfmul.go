@@ -14,7 +14,9 @@ type Gfmul struct {
 
 func (g *Gfmul) Execute() {
 	if g.Semantic == "xex" {
-		result := GfmulBigInt(utils.NewLongFromLittleEndianInBase64(g.Factor1).Int, utils.NewLongFromLittleEndianInBase64(g.Factor2).Int, Coeff2Number([]uint{128, 7, 2, 1, 0}))
+		factor1 := utils.NewLongFromLittleEndianInBase64(g.Factor1).Int
+		factor2 := utils.NewLongFromLittleEndianInBase64(g.Factor2).Int
+		result := GfmulBigInt(factor1, factor2, Coeff2Number([]uint{128, 7, 2, 1, 0}))
 		g.Result = utils.NewLongFromBigInt(result).GetLittleEndianInBase64(16)
 		return
 	}

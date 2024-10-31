@@ -31,7 +31,7 @@ func NewLongFromBase64(s string) *Long {
 }
 
 func (number *Long) GetLittleEndian() []byte {
-	byteSlice := make([]byte, len(number.Int.Bytes()))
+	byteSlice := make([]byte, 16)
 	for i, value := range number.Int.Bytes() {
 		byteSlice[len(byteSlice)-1-i] = value
 	}
