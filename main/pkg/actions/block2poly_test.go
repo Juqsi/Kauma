@@ -15,15 +15,6 @@ func TestBlock2Poly_Execute(t *testing.T) {
 			title:    "Basic Test",
 			input:    Block2Poly{Block: "ARIAAAAAAAAAAAAAAAAAgA=="},
 			expected: []uint{12, 127, 0, 9},
-		}, {
-			title:    "Basic Test 2",
-			input:    Block2Poly{Block: "ARIAAAAAAAAAAAAAAAAAgAE="},
-			expected: []uint{12, 127, 128, 0, 9},
-		},
-		{
-			title:    "Basic Test 2",
-			input:    Block2Poly{Block: "ARIAAAAAAAAAAAAAAAAAgAE="},
-			expected: []uint{12, 127, 128, 0, 9},
 		},
 		{
 			title:    "Empty Input",

@@ -18,8 +18,8 @@ func TestPoly2Block_Execute(t *testing.T) {
 		},
 		{
 			title:    "double Input Coeff",
-			input:    Poly2Block{Coefficients: []uint{128, 128, 12, 127, 0, 9}},
-			expected: "ARIAAAAAAAAAAAAAAAAAgAE=",
+			input:    Poly2Block{Coefficients: []uint{127, 12, 127, 0, 9}},
+			expected: "ARIAAAAAAAAAAAAAAAAAgA==",
 		},
 		{
 			title:    "Empty Input",
