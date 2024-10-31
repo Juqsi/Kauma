@@ -38,23 +38,23 @@ func (number *Long) GetLittleEndian() []byte {
 	return byteSlice
 }
 
-func (number *Long) GetLittleEndianInBase64(minLenght int) string {
+func (number *Long) GetLittleEndianInBase64(length int) string {
 	numberBytes := number.GetLittleEndian()
-	for i := len(numberBytes); i < minLenght; i++ {
+	for i := len(numberBytes); i < length; i++ {
 		numberBytes = append(numberBytes, 0)
 	}
-	return base64.StdEncoding.EncodeToString(numberBytes)
+	return base64.StdEncoding.EncodeToString(numberBytes[:length])
 }
 
-func (number *Long) GetBase64(minLenght int) string {
+func (number *Long) GetBase64(length int) string {
 	numberBytes := number.Int.Bytes()
-	for i := len(numberBytes); i < minLenght; i++ {
+	for i := len(numberBytes); i < length; i++ {
 		numberBytes = append(numberBytes, 0)
 	}
-	return base64.StdEncoding.EncodeToString(numberBytes)
+	return base64.StdEncoding.EncodeToString(numberBytes[:length])
 }
 
-func (number *Long) Bytes(minLen int) []byte {
-	return append(make([]byte, minLen-len(number.Int.Bytes())), number.Int.Bytes()...)
+func (number *Long) Bytes(length int) []byte {
+	return append(make([]byte, length-len(number.Int.Bytes())), number.Int.Bytes()...)[:length]
 
 }
