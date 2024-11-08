@@ -49,7 +49,6 @@ func (p *PaddingOracle) Execute() {
 
 func (p *PaddingOracle) executeBlocks(plaintext *[]byte) {
 	initialCiphertext, _ := base64.StdEncoding.DecodeString(p.Ciphertext)
-	fmt.Println("anzahl der Blöcke: ", len(initialCiphertext)/PADDING_ORACLE_BLOCKSIZE)
 
 	iv, _ := base64.StdEncoding.DecodeString(p.Iv)
 

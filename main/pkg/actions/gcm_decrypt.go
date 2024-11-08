@@ -2,7 +2,6 @@ package actions
 
 import (
 	"Abgabe/main/pkg/utils"
-	"fmt"
 	"math/big"
 )
 
@@ -34,8 +33,6 @@ func (args *Gcm_Decrypt) Execute() {
 	case "sea128":
 		plaintext, tag, _, _ = GcmEncrypt(key, nonce, ciphertext, ad, Sea128Encrypt)
 	}
-	fmt.Println("argTag: ", args.Tag)
-	fmt.Println("calcukated Tag: ", utils.NewLongFromBigInt(tag).GetBase64(16))
 	args.Plaintext = utils.NewLongFromBigInt(plaintext).GetBase64(len(plaintext.Bytes()))
 	args.Authentic = utils.NewLongFromBigInt(tag).GetBase64(16) == args.Tag
 }

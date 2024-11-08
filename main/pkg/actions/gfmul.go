@@ -2,7 +2,6 @@ package actions
 
 import (
 	"Abgabe/main/pkg/utils"
-	"fmt"
 	"math/big"
 )
 
@@ -23,12 +22,9 @@ func (g *Gfmul) Execute() {
 		return
 	case "gcm":
 		factor1 := utils.NewBigEndianLongFromGcmInBase64(g.Factor1).Int
-		fmt.Println(factor1.Text(2))
 		factor2 := utils.NewBigEndianLongFromGcmInBase64(g.Factor2).Int
-		fmt.Println(factor2.Text(2))
 
 		result := GfmulBigInt(factor1, factor2, Coeff2Number([]uint{128, 7, 2, 1, 0}))
-		fmt.Println(result.Text(2))
 		g.Result = utils.NewLongFromBigInt(result).Reverse(128).GetBase64(16)
 		return
 	}

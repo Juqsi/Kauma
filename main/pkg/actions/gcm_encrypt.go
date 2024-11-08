@@ -2,7 +2,6 @@ package actions
 
 import (
 	"Abgabe/main/pkg/utils"
-	"fmt"
 	"math/big"
 )
 
@@ -104,9 +103,7 @@ func GcmEncrypt(key, nonce, plaintext, ad big.Int, encryption Encryption) (ciphe
 	//soll 96 d0 ab
 	resultGhash := GHASHBigEndian(h, ciphers, *L, ad)
 	//l zu gcm umdrehen
-	fmt.Println(resultGhash.Text(16))
 	resultGhash = utils.NewLongFromBigInt(resultGhash).Reverse(128).Int
-	fmt.Println(resultGhash.Text(16))
 
 	tag = *resultGhash.Xor(&resultGhash, &lastXor)
 
@@ -130,21 +127,15 @@ func GHASHBigEndian(hGcm big.Int, ciphers []big.Int, l, ad big.Int) big.Int {
 
 	for ad.BitLen() > 0 {
 		adBlock = new(big.Int).And(&ad, sixteenByte)
-		fmt.Println("asSize: ", len(adBlock.Bytes()))
 		tmp.Xor(&tmp, adBlock)
 		tmp = GfmulBigInt(tmp, *adBlock, Coeff2Number([]uint{128, 7, 2, 1, 0}))
 		ad.Rsh(&ad, 128)
 	}
 
 	for _, cipherBlock := range ciphers {
-		fmt.Println("cipherBLock: ", len(cipherBlock.Bytes()))
 		tmp.Xor(&tmp, &cipherBlock)
 		tmp = GfmulBigInt(tmp, hBig, Coeff2Number([]uint{128, 7, 2, 1, 0}))
 	}
-
-	fmt.Println("tmp: ", tmp.Text(16))
-	t := utils.NewLongFromBigInt(tmp).Reverse(128)
-	fmt.Println(t.Text(16))
 
 	tmp.Xor(&tmp, &l)
 	tmp = GfmulBigInt(tmp, hBig, Coeff2Number([]uint{128, 7, 2, 1, 0}))
