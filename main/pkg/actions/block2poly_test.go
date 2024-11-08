@@ -13,16 +13,21 @@ func TestBlock2Poly_Execute(t *testing.T) {
 	}{
 		{
 			title:    "Basic Test",
-			input:    Block2Poly{Block: "ARIAAAAAAAAAAAAAAAAAgA=="},
+			input:    Block2Poly{Semantic: "xex", Block: "ARIAAAAAAAAAAAAAAAAAgA=="},
 			expected: []uint{12, 127, 0, 9},
 		},
 		{
 			title:    "Empty Input",
-			input:    Block2Poly{Block: ""},
+			input:    Block2Poly{Semantic: "xex", Block: ""},
 			expected: []uint{},
 		}, {
 			title:    "Zero Input",
-			input:    Block2Poly{Block: "AAAAAAAAAAAAAAAAAAAAAA=="},
+			input:    Block2Poly{Semantic: "xex", Block: "AAAAAAAAAAAAAAAAAAAAAA=="},
+			expected: []uint{},
+		},
+		{
+			title:    "Zero Input",
+			input:    Block2Poly{Semantic: "gcm", Block: "AAAAAAAAAAAAAAAAAAAAAA=="},
 			expected: []uint{},
 		},
 	}

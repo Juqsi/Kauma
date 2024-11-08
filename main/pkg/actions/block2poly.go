@@ -12,10 +12,15 @@ type Block2Poly struct {
 }
 
 func (b *Block2Poly) Execute() {
-	b.Result = Number2Coefficients(utils.NewLongFromLittleEndianInBase64(b.Block).Int)
+	switch b.Semantic {
+	case "xex":
+		b.Result = XexNumber2Coefficients(utils.NewLongFromLittleEndianInBase64(b.Block).Int)
+	case "gcm":
+		b.Result = XexNumber2Coefficients(utils.NewBigEndianLongFromGcmInBase64(b.Block).Int)
+	}
 }
 
-func Number2Coefficients(number big.Int) []uint {
+func XexNumber2Coefficients(number big.Int) []uint {
 	ret := []uint{}
 	bitLen := number.BitLen()
 	for i := 0; i < bitLen; i++ {

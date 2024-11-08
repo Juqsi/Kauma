@@ -17,8 +17,8 @@ func runTestcases(testCases models.TestcaseFile) (string, error) {
 		func(key string, testCase models.Testcase) {
 			defer func() {
 				if r := recover(); r != nil {
-					fmt.Fprintf(os.Stderr, "Error in testcase %s: %v\n", testCase.Arguments, r)
-					fmt.Fprintf(os.Stderr, "Stacktrace:\n%s\n", debug.Stack())
+					_, _ = fmt.Fprintf(os.Stderr, "Error in testcase %s: %v\n", testCase.Arguments, r)
+					_, _ = fmt.Fprintf(os.Stderr, "Stacktrace:\n%s\n", debug.Stack())
 				}
 			}()
 
@@ -62,7 +62,35 @@ func runTestcases(testCases models.TestcaseFile) (string, error) {
 				}
 				args.Execute()
 				result[key] = map[string]interface{}{"output": args.Result}
+
+			case "padding_oracle":
+				var args = new(actions.PaddingOracle)
+				if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
+					return
+				}
+				args.Execute()
+				result[key] = map[string]interface{}{"plaintext": args.Result}
+
+			case "gcm_encrypt":
+				var args = new(actions.Gcm_Encrypt)
+				if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
+					return
+				}
+				args.Execute()
+				result[key] = map[string]interface{}{"ciphertext": args.Ciphertext,
+					"tag": args.Tag,
+					"L":   args.L,
+					"H":   args.H}
+			case "gcm_decrypt":
+				var args = new(actions.Gcm_Decrypt)
+				if err := json.Unmarshal(testCase.Arguments, &args); err != nil {
+					return
+				}
+				args.Execute()
+				result[key] = map[string]interface{}{"authentic": args.Authentic,
+					"plaintext": args.Plaintext}
 			}
+
 		}(key, testCase)
 	}
 

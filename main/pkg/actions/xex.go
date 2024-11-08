@@ -26,11 +26,9 @@ func (f *Xex) Execute() {
 	key1 := *new(big.Int).SetBytes(fullKey[:16])
 	key2 := *new(big.Int).SetBytes(fullKey[16:])
 
-	seaConst, _ := new(big.Int).SetString("c0ffeec0ffeec0ffeec0ffeec0ffee11", 16)
-
 	tweak := utils.NewLongFromBase64(f.Tweak).Int
 	//Step 1
-	encryptedTweak, err := Sea128Encrypt(key2, tweak, *seaConst)
+	encryptedTweak, err := Sea128Encrypt(key2, tweak)
 	if err != nil {
 		f.Result = "tweak encryption error"
 		return
@@ -44,9 +42,9 @@ func (f *Xex) Execute() {
 		return
 	}
 	if f.Mode == "encrypt" {
-		text, err = FdeXexEncrypt(key1, encryptedTweak, *seaConst, input)
+		text, err = FdeXexEncrypt(key1, encryptedTweak, input)
 	} else if f.Mode == "decrypt" {
-		text, err = FdeXexDecrypt(key1, encryptedTweak, *seaConst, input)
+		text, err = FdeXexDecrypt(key1, encryptedTweak, input)
 	} else {
 		fmt.Fprintf(os.Stderr, "Error: %+v, %s\n", *f, err.Error())
 		f.Result = "Invalid mode"
@@ -55,14 +53,14 @@ func (f *Xex) Execute() {
 	f.Result = base64.StdEncoding.EncodeToString(text)
 }
 
-func FdeXexEncrypt(key, tweak, seaConst big.Int, message []byte) (cipher []byte, err error) {
+func FdeXexEncrypt(key, tweak big.Int, message []byte) (cipher []byte, err error) {
 	blocks := getBlocks(message, 16)
 	a := Coeff2Number([]uint{1})
 	for _, block := range blocks {
 		//Step 2
 		block.Xor(&block, &tweak)
 		//Step 3
-		encryptedBlock, err := Sea128Encrypt(key, block, seaConst)
+		encryptedBlock, err := Sea128Encrypt(key, block)
 		if err != nil {
 			return cipher, err
 		}
@@ -76,7 +74,7 @@ func FdeXexEncrypt(key, tweak, seaConst big.Int, message []byte) (cipher []byte,
 	return cipher, err
 }
 
-func FdeXexDecrypt(key, tweak, seaConst big.Int, cipher []byte) (text []byte, err error) {
+func FdeXexDecrypt(key, tweak big.Int, cipher []byte) (text []byte, err error) {
 	blocks := getBlocks(cipher, 16)
 	a := Coeff2Number([]uint{1})
 	for _, block := range blocks {
@@ -84,7 +82,7 @@ func FdeXexDecrypt(key, tweak, seaConst big.Int, cipher []byte) (text []byte, er
 		block.Xor(&block, &tweak)
 
 		//Step 3
-		decryptedBlock, err := Sea128Decrypt(key, block, seaConst)
+		decryptedBlock, err := Sea128Decrypt(key, block)
 		if err != nil {
 			return text, err
 		}

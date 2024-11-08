@@ -15,19 +15,20 @@ type Sea128 struct {
 	Result string
 }
 
+type Encryption func(key, message big.Int) (big.Int, error)
+type Decryption func(key, message big.Int) (big.Int, error)
+
 func (s *Sea128) Execute() {
 	var a big.Int
 	var err error
-
-	seaConstant, _ := new(big.Int).SetString("c0ffeec0ffeec0ffeec0ffeec0ffee11", 16)
 
 	message := utils.NewLongFromBase64(s.Input).Int
 	key := utils.NewLongFromBase64(s.Key).Int
 
 	if s.Mode == "encrypt" {
-		a, err = Sea128Encrypt(key, message, *seaConstant)
+		a, err = Sea128Encrypt(key, message)
 	} else if s.Mode == "decrypt" {
-		a, err = Sea128Decrypt(key, message, *seaConstant)
+		a, err = Sea128Decrypt(key, message)
 	} else {
 		s.Result = "Invalid mode"
 		fmt.Fprintf(os.Stderr, "Error: %+v\n", *s)
@@ -43,12 +44,14 @@ func (s *Sea128) Execute() {
 	s.Result = utils.NewLongFromBigInt(a).GetBase64(16)
 }
 
-func Sea128Encrypt(key, message, seaConstant big.Int) (big.Int, error) {
+func Sea128Encrypt(key, message big.Int) (big.Int, error) {
+	seaConstant, _ := new(big.Int).SetString("c0ffeec0ffeec0ffeec0ffeec0ffee11", 16)
+
 	cipher, err := AesEncrypt(key, message)
 	if err != nil {
 		return big.Int{}, err
 	}
-	cipher.Xor(&cipher, &seaConstant)
+	cipher.Xor(&cipher, seaConstant)
 
 	return cipher, nil
 }
@@ -66,8 +69,10 @@ func AesEncrypt(key, message big.Int) (big.Int, error) {
 	return *new(big.Int).SetBytes(ciphertext), nil
 }
 
-func Sea128Decrypt(key, ciphertext, seaConstant big.Int) (big.Int, error) {
-	ciphertext1 := new(big.Int).Xor(&ciphertext, &seaConstant)
+func Sea128Decrypt(key, ciphertext big.Int) (big.Int, error) {
+	seaConstant, _ := new(big.Int).SetString("c0ffeec0ffeec0ffeec0ffeec0ffee11", 16)
+
+	ciphertext1 := new(big.Int).Xor(&ciphertext, seaConstant)
 	plaintext, err := AesDecrypt(key, *ciphertext1)
 	if err != nil {
 		return big.Int{}, err

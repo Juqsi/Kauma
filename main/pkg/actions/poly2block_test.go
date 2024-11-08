@@ -13,17 +13,17 @@ func TestPoly2Block_Execute(t *testing.T) {
 	}{
 		{
 			title:    "Basic Test",
-			input:    Poly2Block{Coefficients: []uint{12, 127, 0, 9}},
+			input:    Poly2Block{Semantic: "xex", Coefficients: []uint{12, 127, 0, 9}},
 			expected: "ARIAAAAAAAAAAAAAAAAAgA==",
 		},
 		{
 			title:    "double Input Coeff",
-			input:    Poly2Block{Coefficients: []uint{127, 12, 127, 0, 9}},
+			input:    Poly2Block{Semantic: "xex", Coefficients: []uint{127, 12, 127, 0, 9}},
 			expected: "ARIAAAAAAAAAAAAAAAAAgA==",
 		},
 		{
 			title:    "Empty Input",
-			input:    Poly2Block{Coefficients: []uint{}},
+			input:    Poly2Block{Semantic: "xex", Coefficients: []uint{}},
 			expected: "AAAAAAAAAAAAAAAAAAAAAA==",
 		},
 	}

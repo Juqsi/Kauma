@@ -21,13 +21,6 @@
             "block": "AAAAAAAAAAAAAAAAAAAAAA=="
             }
         },
-        "b956d760-023d-4b10-bad2-15d2b6da23fe": {
-            "action": "block2poly",
-            "arguments": {
-            "semantic": "xex",
-            "block": "ARIAAAAAAAAAAAAAAAAAgAE="
-            }
-        },
         "b856d760-023d-4b00-bad2-15d2b6da24fe": {
             "action": "gfmul",
             "arguments": {
@@ -84,7 +77,7 @@
             "input": ""
             }
         },
-        "b956d970-023d-4b00-bad5-15d2b6da24fe": {
+        "sea128-118": {
             "action": "sea128",
             "arguments": {
             "mode": "decrypt",
@@ -110,5 +103,15 @@
            "input": "lr/ItaYGFXCtHhdPndE65yg7u/GIdM9wscABiiFOUH2Sbyc2UFMlIRSMnZrYCW1a"
            }
         }
+        "b856d760-023d-4b00-bad6-15d2b6da24fe": {
+           "action": "xex",
+           "arguments": {
+           "mode": "decrypt",
+           "key": "B1ygNO/CyRYIUYhTSgoUysX5Y/wWLi4UiWaVeloUWs0=",
+           "tweak": "6VXORr+YYHrd2nVe0OlA+Q==",
+           "input": "lr/ItaYGFXCtHhdPndE65yg7u/GIdM9wscABiiFOUH2Sbyc2UFMlIRSMnZrYCW1a"
+           }
+        },
+
    }
 }
