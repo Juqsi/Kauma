@@ -11,7 +11,7 @@ type Long struct {
 
 func NewLongFromBigInt(b big.Int) *Long {
 	long := new(Long)
-	long.Set(&b)
+	long.Int.Set(&b)
 	return long
 }
 
@@ -31,7 +31,7 @@ func NewBigEndianLongFromGcmInBase64(s string) *Long {
 	padding := make([]byte, size*16-len(byteSlice))
 	byteSlice = append(byteSlice, padding...)
 	number.SetBytes(byteSlice)
-	return number.Reverse(len(byteSlice) * 8)
+	return number.GcmToggle()
 }
 
 func NewLongFromBase64(s string) *Long {
@@ -86,7 +86,12 @@ func Xor(a, b []byte) []byte {
 // Wenn big endian zu gcm dann wird number in gcm mit 0 gepaddet sein, dadurch einfach links mit 0 auffüllen
 // Bei gcm hat weiß man dann wie viele 0 links fehlen also bis zum lsb
 // Bei big endian weiß man wir vielen 0 links fehlen also bis zum msb
-func (number *Long) Reverse(bitLen int) *Long {
+func (number *Long) ReverseCustom(bitLen int) *Long {
+
+	bitLenAuto := ((number.BitLen()+7)/8 + 15) / 16 * 128
+	if bitLen == -1 {
+		bitLen = bitLenAuto
+	}
 	reversed := big.NewInt(0)
 	for i := 0; i < bitLen; i++ {
 		if number.Bit(i) == 1 {
@@ -95,4 +100,8 @@ func (number *Long) Reverse(bitLen int) *Long {
 	}
 
 	return NewLongFromBigInt(*reversed)
+}
+
+func (number *Long) GcmToggle() *Long {
+	return number.ReverseCustom(-1)
 }

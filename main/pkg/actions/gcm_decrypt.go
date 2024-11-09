@@ -23,16 +23,29 @@ func (args *Gcm_Decrypt) Execute() {
 	ciphertext := utils.NewBigEndianLongFromGcmInBase64(args.Ciphertext).Int
 	ad := utils.NewBigEndianLongFromGcmInBase64(args.Ad).Int
 
-	var tag big.Int
+	var lastXor big.Int
 	var plaintext big.Int
+	var h big.Int
+	var l big.Int
 
 	switch args.Algorithm {
 
 	case "aes128":
-		plaintext, tag, _, _ = GcmEncrypt(key, nonce, ciphertext, ad, AesEncrypt)
+		plaintext, lastXor, h, l = GcmEncrypt(key, nonce, ciphertext, ad, AesEncrypt)
 	case "sea128":
-		plaintext, tag, _, _ = GcmEncrypt(key, nonce, ciphertext, ad, Sea128Encrypt)
+		plaintext, lastXor, h, l = GcmEncrypt(key, nonce, ciphertext, ad, Sea128Encrypt)
 	}
+
+	//zu big Endian umdrehen
+	lBig := &utils.NewLongFromBigInt(l).GcmToggle().Int
+	hBig := utils.NewLongFromBigInt(h).GcmToggle().Int
+
+	resultGhash := GHASHBigEndian(hBig, ciphertext, *lBig, ad)
+
+	resultGhash = utils.NewLongFromBigInt(resultGhash).GcmToggle().Int
+
+	tag := *resultGhash.Xor(&resultGhash, &lastXor)
+
 	args.Plaintext = utils.NewLongFromBigInt(plaintext).GetBase64(len(plaintext.Bytes()))
 	args.Authentic = utils.NewLongFromBigInt(tag).GetBase64(16) == args.Tag
 }

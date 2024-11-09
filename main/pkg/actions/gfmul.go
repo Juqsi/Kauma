@@ -25,7 +25,7 @@ func (g *Gfmul) Execute() {
 		factor2 := utils.NewBigEndianLongFromGcmInBase64(g.Factor2).Int
 
 		result := GfmulBigInt(factor1, factor2, Coeff2Number([]uint{128, 7, 2, 1, 0}))
-		g.Result = utils.NewLongFromBigInt(result).Reverse(128).GetBase64(16)
+		g.Result = utils.NewLongFromBigInt(result).GcmToggle().GetBase64(16)
 		return
 	}
 	g.Result = "Semantic isnt valid"

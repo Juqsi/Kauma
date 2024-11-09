@@ -16,7 +16,7 @@ func (p *Poly2Block) Execute() {
 	case "xex":
 		p.Result = utils.NewLongFromBigInt(Coeff2Number(p.Coefficients)).GetLittleEndianInBase64(16)
 	case "gcm":
-		p.Result = utils.NewLongFromBigInt(Coeff2Number(p.Coefficients)).Reverse(128).GetBase64(16)
+		p.Result = utils.NewLongFromBigInt(Coeff2Number(p.Coefficients)).GcmToggle().GetBase64(16)
 	}
 
 }
