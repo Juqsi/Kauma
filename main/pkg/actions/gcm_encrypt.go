@@ -3,7 +3,6 @@ package actions
 import (
 	"Abgabe/main/pkg/utils"
 	"encoding/base64"
-	"fmt"
 	"math/big"
 )
 
@@ -53,7 +52,6 @@ func (args *Gcm_Encrypt) Execute() {
 
 	//Nur für die genaue länge
 	plaintextBytes, _ := base64.StdEncoding.DecodeString(args.Plaintext)
-	fmt.Println(tag.Text(16))
 
 	args.Ciphertext = utils.NewLongFromBigInt(textGcm).GetBase64(len(plaintextBytes))
 	args.Tag = utils.NewLongFromBigInt(tag).GetBase64(16)
