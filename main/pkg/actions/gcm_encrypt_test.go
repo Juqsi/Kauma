@@ -46,6 +46,34 @@ func TestGcmEncrypt_Execute(t *testing.T) {
 				L:          "AAAAAAAAAEAAAAAAAAAAgA==",
 				H:          "xhFcAUT66qWIpYz+Ch5ujw=="},
 		},
+		{
+			title: "Forums Test",
+			input: Gcm_Encrypt{
+				Algorithm: "aes128",
+				Nonce:     "vfBBn9j5pRpZG3aE",
+				Key:       "XwSlYO8uVVp6djVHtc1UcA==",
+				Plaintext: "hXuoS+iiObu+SHmnULnPrKYFHlk3x5nVffZ1",
+				Ad:        ""},
+			expected: Gcm_Encrypt_Expected{
+				H:          "lxisvT6OySmTowAfaFe51Q==",
+				L:          "AAAAAAAAAAAAAAAAAAAA2A==",
+				Ciphertext: "kBnC8gEj5DmLfst0/ChJURX0ZU34/JaSSlBp",
+				Tag:        "ptV+z6C6D5mJlDeMB0Hb+g=="},
+		},
+		{
+			title: "Forums Test",
+			input: Gcm_Encrypt{
+				Algorithm: "aes128",
+				Nonce:     "SwVYf3IJ2p/VTiyz",
+				Key:       "bYfxz4zIS8NGWT55xSGy7Q==",
+				Plaintext: "UbtwfeOtfSgD8vfDrxDv+z+893u6tlszrui5Xrwa",
+				Ad:        "gjumiDj/"},
+			expected: Gcm_Encrypt_Expected{
+				H:          "xAjsW5daQS3PYJnPTWyAUg==",
+				L:          "AAAAAAAAADAAAAAAAAAA8A==",
+				Ciphertext: "1nrByALj2kN0ltVxNyH++24ZrXwhdXaoj7nah3cE",
+				Tag:        "3ZPCYYRcfzcQD/Sw8tslhw=="},
+		},
 	}
 
 	for _, testcase := range testcases {

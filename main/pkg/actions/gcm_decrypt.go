@@ -2,6 +2,7 @@ package actions
 
 import (
 	"Abgabe/main/pkg/utils"
+	"encoding/base64"
 	"math/big"
 )
 
@@ -24,28 +25,31 @@ func (args *Gcm_Decrypt) Execute() {
 	ad := utils.NewBigEndianLongFromGcmInBase64(args.Ad).Int
 
 	var lastXor big.Int
-	var plaintext big.Int
-	var h big.Int
-	var l big.Int
+	var textGcm big.Int
+	var hBig big.Int
 
 	switch args.Algorithm {
-
 	case "aes128":
-		plaintext, lastXor, h, l = GcmEncrypt(key, nonce, ciphertext, ad, AesEncrypt)
+		lastXor = firstBlock(key, nonce, AesEncrypt)
+		_, hBig = calculateH(key, AesEncrypt)
+		textGcm, _ = gcmBlocksEncryption(key, nonce, ciphertext, AesEncrypt)
 	case "sea128":
-		plaintext, lastXor, h, l = GcmEncrypt(key, nonce, ciphertext, ad, Sea128Encrypt)
+		lastXor = firstBlock(key, nonce, Sea128Encrypt)
+		_, hBig = calculateH(key, Sea128Encrypt)
+		textGcm, _ = gcmBlocksEncryption(key, nonce, ciphertext, Sea128Encrypt)
 	}
 
-	//zu big Endian umdrehen
-	lBig := &utils.NewLongFromBigInt(l).GcmToggle().Int
-	hBig := utils.NewLongFromBigInt(h).GcmToggle().Int
+	_, lBig := calculateL(ciphertext, ad)
 
-	resultGhash := GHASHBigEndian(hBig, ciphertext, *lBig, ad)
+	resultGhash := GHASHBigEndian(hBig, ciphertext, lBig, ad)
 
 	resultGhash = utils.NewLongFromBigInt(resultGhash).GcmToggle().Int
 
 	tag := *resultGhash.Xor(&resultGhash, &lastXor)
 
-	args.Plaintext = utils.NewLongFromBigInt(plaintext).GetBase64(len(plaintext.Bytes()))
+	//Nur für die genaue länge
+	ciphertextBytes, _ := base64.StdEncoding.DecodeString(args.Ciphertext)
+
+	args.Plaintext = utils.NewLongFromBigInt(textGcm).GetBase64(len(ciphertextBytes))
 	args.Authentic = utils.NewLongFromBigInt(tag).GetBase64(16) == args.Tag
 }
