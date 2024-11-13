@@ -1,0 +1,48 @@
+package gfpoly
+
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
+
+type GfpolyMulExpected struct {
+	P []string `json:"S"`
+}
+
+func TestGfpolyMul_Execute(t *testing.T) {
+	testcases := []struct {
+		title    string
+		input    GfpolyMul
+		expected GfpolyMulExpected
+	}{
+		{
+			title: "Basic Test Encode aes",
+			input: GfpolyMul{
+				A: []string{
+					"JAAAAAAAAAAAAAAAAAAAAA==",
+					"wAAAAAAAAAAAAAAAAAAAAA==",
+					"ACAAAAAAAAAAAAAAAAAAAA==",
+				},
+				B: []string{
+					"0AAAAAAAAAAAAAAAAAAAAA==",
+					"IQAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+			expected: GfpolyMulExpected{
+				P: []string{
+					"MoAAAAAAAAAAAAAAAAAAAA==",
+					"sUgAAAAAAAAAAAAAAAAAAA==",
+					"MbQAAAAAAAAAAAAAAAAAAA==",
+					"AAhAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+		},
+	}
+
+	for _, testcase := range testcases {
+		t.Run(testcase.title, func(t *testing.T) {
+			testcase.input.Execute()
+			assert.Equal(t, testcase.expected.P, testcase.input.P, "P: Expected %v, got %v", testcase.expected.P, testcase.input.P)
+		})
+	}
+}

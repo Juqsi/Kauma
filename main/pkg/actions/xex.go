@@ -68,7 +68,7 @@ func FdeXexEncrypt(key, tweak big.Int, message []byte) (cipher []byte, err error
 		encryptedBlock.Xor(&encryptedBlock, &tweak)
 		cipher = append(cipher, utils.NewLongFromBigInt(encryptedBlock).Bytes(aes.BlockSize)...)
 		//Step 5
-		tweak = GfmulBigInt(*new(big.Int).SetBytes(utils.NewLongFromBigInt(tweak).GetLittleEndian()), a, Coeff2Number([]uint{128, 7, 2, 1, 0}))
+		tweak = Gfmul128(*new(big.Int).SetBytes(utils.NewLongFromBigInt(tweak).GetLittleEndian()), a)
 		tweak.SetBytes(utils.NewLongFromBigInt(tweak).GetLittleEndian())
 	}
 	return cipher, err
@@ -91,7 +91,7 @@ func FdeXexDecrypt(key, tweak big.Int, cipher []byte) (text []byte, err error) {
 		text = append(text, utils.NewLongFromBigInt(decryptedBlock).Bytes(aes.BlockSize)...)
 
 		//Step 5
-		tweak = GfmulBigInt(*new(big.Int).SetBytes(utils.NewLongFromBigInt(tweak).GetLittleEndian()), a, Coeff2Number([]uint{128, 7, 2, 1, 0}))
+		tweak = Gfmul128(*new(big.Int).SetBytes(utils.NewLongFromBigInt(tweak).GetLittleEndian()), a)
 		tweak.SetBytes(utils.NewLongFromBigInt(tweak).GetLittleEndian())
 	}
 	return text, err

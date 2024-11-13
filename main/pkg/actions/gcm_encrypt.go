@@ -149,25 +149,25 @@ func GHASHBigEndian(hBig big.Int, ciphers big.Int, lBig, ad big.Int) big.Int {
 	//xor unnötig aber naja
 	tmp := *new(big.Int).Xor(adBlock, big.NewInt(0))
 
-	tmp = GfmulBigInt(tmp, hBig, Coeff2Number([]uint{128, 7, 2, 1, 0}))
+	tmp = Gfmul128(tmp, hBig)
 
 	ad.Rsh(&ad, 128)
 
 	for ad.BitLen() > 0 {
 		adBlock = new(big.Int).And(&ad, sixteenByte)
 		tmp.Xor(&tmp, adBlock)
-		tmp = GfmulBigInt(tmp, hBig, Coeff2Number([]uint{128, 7, 2, 1, 0}))
+		tmp = Gfmul128(tmp, hBig)
 		ad.Rsh(&ad, 128)
 	}
 
 	for ciphers.BitLen() > 0 {
 		cipherBlock := new(big.Int).And(&ciphers, sixteenByte)
 		tmp.Xor(&tmp, cipherBlock)
-		tmp = GfmulBigInt(tmp, hBig, Coeff2Number([]uint{128, 7, 2, 1, 0}))
+		tmp = Gfmul128(tmp, hBig)
 		ciphers.Rsh(&ciphers, 128)
 	}
 
 	tmp.Xor(&tmp, &lBig)
-	tmp = GfmulBigInt(tmp, hBig, Coeff2Number([]uint{128, 7, 2, 1, 0}))
+	tmp = Gfmul128(tmp, hBig)
 	return tmp
 }

@@ -17,19 +17,23 @@ func (g *Gfmul) Execute() {
 	case "xex":
 		factor1 := utils.NewLongFromLittleEndianInBase64(g.Factor1).Int
 		factor2 := utils.NewLongFromLittleEndianInBase64(g.Factor2).Int
-		result := GfmulBigInt(factor1, factor2, Coeff2Number([]uint{128, 7, 2, 1, 0}))
+		result := Gfmul128(factor1, factor2)
 		g.Result = utils.NewLongFromBigInt(result).GetLittleEndianInBase64(16)
 		return
 	case "gcm":
 		factor1 := utils.NewBigEndianLongFromGcmInBase64(g.Factor1).Int
 		factor2 := utils.NewBigEndianLongFromGcmInBase64(g.Factor2).Int
 
-		result := GfmulBigInt(factor1, factor2, Coeff2Number([]uint{128, 7, 2, 1, 0}))
+		result := Gfmul128(factor1, factor2)
 		g.Result = utils.NewLongFromBigInt(result).GcmToggle().GetBase64(16)
 		return
 	}
 	g.Result = "Semantic isnt valid"
 	return
+}
+
+func Gfmul128(a, b big.Int) big.Int {
+	return GfmulBigInt(a, b, Coeff2Number([]uint{128, 7, 2, 1, 0}))
 }
 
 func GfmulBigInt(factor1, factor2, reduce big.Int) big.Int {
