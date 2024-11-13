@@ -110,10 +110,30 @@ func (p *PaddingOracle) executeByteIndex(conn net.Conn, plaintextBlock, qBlocks,
 			_, _ = fmt.Fprintf(os.Stderr, "Error: %v", err)
 			continue
 		}
+		//multiple true responses
 		if len(response) != 1 {
-			_, _ = fmt.Fprintf(os.Stderr, "Error: invalid response length")
-			//TODO error handling
-			//testen ob byte index 1 ist und dann weiter Prüfen
+			err = sendMessage(conn, qBlocks)
+			if err != nil {
+				_, _ = fmt.Fprintf(os.Stderr, "multiple true check: Error sending qBlock ByteIndex: %d, i: %v:\n %v", byteIndex, response, err)
+				continue
+			}
+			for _, q := range response {
+				qBlocks[PADDING_ORACLE_BLOCKSIZE-byteIndex-1] = byte(q ^ 0xff)
+				qBlocks[PADDING_ORACLE_BLOCKSIZE-byteIndex] = byte(q)
+				err = sendMessage(conn, qBlocks)
+				if err != nil {
+					_, _ = fmt.Fprintf(os.Stderr, "multiple true check: Error sending qBlock ByteIndex: %d, i: %d:\n %v", byteIndex, q, err)
+					continue
+				}
+			}
+			response, err = receiveMessage(conn, endI-startI)
+			if err != nil {
+				_, _ = fmt.Fprintf(os.Stderr, "Error: %v", err)
+				continue
+			}
+			if len(response) != 0 {
+				panic("multiple true check failed")
+			}
 		}
 		// berechnen von D(c)i = pi xor qi
 		pByte := byte(byteIndex)
