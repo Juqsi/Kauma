@@ -73,7 +73,7 @@ func (p *PaddingOracle) executeBlocks(plaintext *[]byte) {
 		plaintextBlock := make([]byte, PADDING_ORACLE_BLOCKSIZE)
 		qBlocks := make([]byte, PADDING_ORACLE_BLOCKSIZE)
 
-		p.executeByteIndex(conn, plaintextBlock, qBlocks, iv, ciphertext)
+		p.executeByteIndex(conn, plaintextBlock, qBlocks)
 
 		plaintextBlock = utils.Xor(plaintextBlock, iv)
 		iv = ciphertext
@@ -81,7 +81,7 @@ func (p *PaddingOracle) executeBlocks(plaintext *[]byte) {
 	}
 }
 
-func (p *PaddingOracle) executeByteIndex(conn net.Conn, plaintextBlock, qBlocks, iv, ciphertext []byte) {
+func (p *PaddingOracle) executeByteIndex(conn net.Conn, plaintextBlock, qBlocks []byte) {
 	for byteIndex := 1; byteIndex <= PADDING_ORACLE_BLOCKSIZE; byteIndex++ {
 		var endI int
 		var startI int
@@ -128,14 +128,12 @@ func (p *PaddingOracle) executeByteIndex(conn net.Conn, plaintextBlock, qBlocks,
 					continue
 				}
 			}
-			response, err = receiveMessage(conn, endI-startI)
+			NewResponse, err := receiveMessage(conn, len(response))
 			if err != nil {
 				_, _ = fmt.Fprintf(os.Stderr, "Error: %v", err)
 				continue
 			}
-			if len(response) != 0 {
-				panic("multiple true check failed")
-			}
+			response[0] = response[NewResponse[0]]
 		}
 		// berechnen von D(c)i = pi xor qi
 		pByte := byte(byteIndex)
