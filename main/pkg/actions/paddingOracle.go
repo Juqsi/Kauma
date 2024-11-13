@@ -112,7 +112,9 @@ func (p *PaddingOracle) executeByteIndex(conn net.Conn, plaintextBlock, qBlocks,
 		}
 		//multiple true responses
 		if len(response) != 1 {
-			err = sendMessage(conn, qBlocks)
+			newLengthField := make([]byte, 2)
+			binary.LittleEndian.PutUint16(newLengthField, uint16(len(response)))
+			err = sendMessage(conn, newLengthField)
 			if err != nil {
 				_, _ = fmt.Fprintf(os.Stderr, "multiple true check: Error sending qBlock ByteIndex: %d, i: %v:\n %v", byteIndex, response, err)
 				continue
