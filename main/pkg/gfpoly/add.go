@@ -3,14 +3,14 @@ package gfpoly
 type GfpolyAdd struct {
 	A []string `json:"A"`
 	B []string `json:"B"`
-	S []string `json:"S"`
+	Z []string `json:"Z"`
 }
 
 func (g *GfpolyAdd) Execute() {
 	polyA := NewPolyFromBase64(g.A)
 	polyB := NewPolyFromBase64(g.B)
 	polyA.Add(*polyA, *polyB)
-	g.S = polyA.Base64()
+	g.Z = polyA.Base64()
 }
 
 func (p *Poly) Add(a, b Poly) (result Poly) {

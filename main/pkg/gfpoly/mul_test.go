@@ -6,7 +6,7 @@ import (
 )
 
 type GfpolyMulExpected struct {
-	P []string `json:"S"`
+	P []string `json:"Z"`
 }
 
 func TestGfpolyMul_Execute(t *testing.T) {

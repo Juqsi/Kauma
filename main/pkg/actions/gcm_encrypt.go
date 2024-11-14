@@ -98,7 +98,7 @@ func gcmBlocksEncryption(key, nonce, plaintext big.Int, encryption Encryption) (
 	sixteenByte.Sub(sixteenByte, big.NewInt(1))
 
 	index := 0
-	for plaintext.BitLen() > 0 {
+	for plaintext.Sign() > 0 {
 		//nonce immer um 1 erhöhen
 		nonce.Add(&nonce, big.NewInt(1))
 		//encrypted block berechnen
@@ -153,7 +153,7 @@ func GHASHBigEndian(hBig big.Int, ciphers big.Int, lBig, ad big.Int) big.Int {
 
 	ad.Rsh(&ad, 128)
 
-	for ad.BitLen() > 0 {
+	for ad.Sign() > 0 {
 		adBlock = new(big.Int).And(&ad, sixteenByte)
 		tmp.Xor(&tmp, adBlock)
 		tmp = Gfmul128(tmp, hBig)

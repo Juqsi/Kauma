@@ -6,7 +6,7 @@ import (
 )
 
 type GfpolyAddExpected struct {
-	S []string `json:"S"`
+	S []string `json:"Z"`
 }
 
 func TestGfpolyAdd_Execute(t *testing.T) {
@@ -43,7 +43,7 @@ func TestGfpolyAdd_Execute(t *testing.T) {
 	for _, testcase := range testcases {
 		t.Run(testcase.title, func(t *testing.T) {
 			testcase.input.Execute()
-			assert.Equal(t, testcase.expected.S, testcase.input.S, "S: Expected %v, got %v", testcase.expected.S, testcase.input.S)
+			assert.Equal(t, testcase.expected.S, testcase.input.Z, "Z: Expected %v, got %v", testcase.expected.S, testcase.input.Z)
 		})
 	}
 }
