@@ -24,6 +24,8 @@ func runTestcases(testCases models.TestcaseFile) (string, error) {
 		"gfpoly_mul":     handleGfpolyMul,
 		"gfpoly_pow":     handleGfpolyPow,
 		"gfdiv":          handleGfdiv,
+		"gfpoly_divmod":  handleGfpolydiv,
+		"gfpoly_powmod":  handleGfpolypowmod,
 	}
 
 	for key, testCase := range testCases.Testcases {

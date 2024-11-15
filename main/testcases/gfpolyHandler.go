@@ -31,3 +31,19 @@ func handleGfpolyPow(argsData []byte) (map[string]interface{}, error) {
 	args.Execute()
 	return map[string]interface{}{"Z": args.Z}, nil
 }
+func handleGfpolydiv(argsData []byte) (map[string]interface{}, error) {
+	args := new(gfpoly.GfpolyDiv)
+	if err := json.Unmarshal(argsData, &args); err != nil {
+		return nil, err
+	}
+	args.Execute()
+	return map[string]interface{}{"Q": args.Q, "R": args.R}, nil
+}
+func handleGfpolypowmod(argsData []byte) (map[string]interface{}, error) {
+	args := new(gfpoly.GfpolyPowmod)
+	if err := json.Unmarshal(argsData, &args); err != nil {
+		return nil, err
+	}
+	args.Execute()
+	return map[string]interface{}{"Z": args.Z}, nil
+}
