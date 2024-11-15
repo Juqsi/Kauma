@@ -11,7 +11,7 @@ func handleGfpolyAdd(argsData []byte) (map[string]interface{}, error) {
 		return nil, err
 	}
 	args.Execute()
-	return map[string]interface{}{"Z": args.Z}, nil
+	return map[string]interface{}{"S": args.Z}, nil
 }
 
 func handleGfpolyMul(argsData []byte) (map[string]interface{}, error) {

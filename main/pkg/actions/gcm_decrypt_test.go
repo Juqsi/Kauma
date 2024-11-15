@@ -46,6 +46,36 @@ func TestGcmDecrypt_Execute(t *testing.T) {
 				Plaintext: "AxSiKm93Gr2+",
 			},
 		},
+		{
+			title: "failed Test Encode aes",
+			input: Gcm_Decrypt{
+				Algorithm:  "aes128",
+				Nonce:      "50aLsYDILtAaZqbe",
+				Key:        "eUisCtpuaE4sBoGAssUIHg==",
+				Ciphertext: "oNA0HfQ8GdotcH47IgFBJ0NQiSLqz4GJMp+t",
+				Ad:         "xhbDIZtET4WYYYsEAu6uWfVRpg8=",
+				Tag:        "ovgemzM2PEV76rhFmp0SMg==",
+			},
+			expected: Gcm_Decrypt_Expected{
+				Authentic: true,
+				Plaintext: "OIRJ9HElN+HNYhaqWlk+cXwFThZDMTwXrEhd",
+			},
+		},
+		{
+			title: "failed Test Encode sea",
+			input: Gcm_Decrypt{
+				Algorithm:  "sea128",
+				Nonce:      "50aLsYDILtAaZqbe",
+				Key:        "eUisCtpuaE4sBoGAssUIHg==",
+				Ciphertext: "vHh+8yTwsbK8dHTcBbVIvyQ4dl8l0jkJp4KwOMvVgw==",
+				Ad:         "itzgNFd7bmvnHvc9S2PsfraTSJffPa9rBKhyTnnRGe1JUQ==",
+				Tag:        "otHDGWbSZIiiJdX2D39gsg==",
+			},
+			expected: Gcm_Decrypt_Expected{
+				Authentic: true,
+				Plaintext: "5NPt2l4HX3aypuOjvRLZ+NuSX6tzwkRo15W/t7+2YQ==",
+			},
+		},
 	}
 
 	for _, testcase := range testcases {

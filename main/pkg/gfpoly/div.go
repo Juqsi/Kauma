@@ -1,18 +1,37 @@
 package gfpoly
 
+import (
+	"Abgabe/main/pkg/actions"
+)
+
 type GfpolyDiv struct {
 	A []string `json:"A"`
-	K int      `json:"K"`
-	Z []string `json:"p"`
+	B []string `json:"B"`
+	Q []string `json:"Q"`
+	R []string `json:"R"`
 }
 
 func (g *GfpolyDiv) Execute() {
 	polyA := NewPolyFromBase64(g.A)
-	//polyA.Div(*polyA, g.K)
-	g.Z = polyA.Base64()
+	polyB := NewPolyFromBase64(g.B)
+	polyQ, polyR := new(Poly).Div(*polyA, *polyB)
+	g.Q = polyQ.Base64()
+	g.R = polyR.Base64()
 }
 
-func (p *Poly) Div(a, b Poly) Poly {
-	return nil
-
+func (p *Poly) Div(dividend, divisor Poly) (quotient, remainder Poly) {
+	lenDivisor := len(divisor)
+	quotient = make(Poly, len(dividend)-lenDivisor+1)
+	for len(dividend) >= lenDivisor {
+		lenDividen := len(dividend)
+		tmp := make(Poly, lenDividen-lenDivisor+1)
+		a := dividend[lenDividen-1]
+		b := divisor[lenDivisor-1]
+		tmp[len(tmp)-1] = actions.Gfdiv128(a, b)
+		quotient[lenDividen-lenDivisor] = tmp[len(tmp)-1]
+		tmp.Mul(tmp, divisor)
+		dividend.Add(dividend, tmp)
+		dividend = dividend[:len(dividend)-1]
+	}
+	return quotient, dividend
 }
