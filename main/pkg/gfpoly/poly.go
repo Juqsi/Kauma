@@ -22,3 +22,14 @@ func (p *Poly) Base64() []string {
 	}
 	return s
 }
+
+func (p *Poly) Reduce() Poly {
+	lenP := len(*p)
+	for i := lenP; i > 0; i-- {
+		if (*p)[i-1].Sign() != 0 {
+			*p = (*p)[:i]
+			return *p
+		}
+	}
+	return *p
+}

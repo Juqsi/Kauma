@@ -24,5 +24,5 @@ func (p *Poly) Mul(a, b Poly) Poly {
 		}
 	}
 	*p = result
-	return result
+	return *p
 }

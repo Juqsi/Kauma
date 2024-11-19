@@ -29,5 +29,5 @@ func (p *Poly) Pow(a Poly, n int) Poly {
 		result.Mul(result, a)
 	}
 	*p = result
-	return result
+	return *p
 }

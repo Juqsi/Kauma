@@ -90,7 +90,8 @@ func calculateL(plaintext, ad big.Int) (lGcm, lBig big.Int) {
 	return lGcm, lBig
 }
 
-func gcmBlocksEncryption(key, nonce, plaintext big.Int, encryption Encryption) (textGcm, textBig big.Int) {
+func gcmBlocksEncryption(key, nonce, plaintxt big.Int, encryption Encryption) (textGcm, textBig big.Int) {
+	plaintext := *new(big.Int).Set(&plaintxt)
 
 	//Step 3
 	sixteenByte := big.NewInt(1)

@@ -37,5 +37,5 @@ func (p *Poly) Powmod(a Poly, m Poly, k int) Poly {
 		k >>= 1
 	}
 	*p = result
-	return result
+	return *p
 }

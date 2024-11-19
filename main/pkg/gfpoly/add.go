@@ -10,6 +10,7 @@ func (g *GfpolyAdd) Execute() {
 	polyA := NewPolyFromBase64(g.A)
 	polyB := NewPolyFromBase64(g.B)
 	polyA.Add(*polyA, *polyB)
+	polyA.Reduce()
 	g.Z = polyA.Base64()
 }
 
@@ -21,5 +22,5 @@ func (p *Poly) Add(a, b Poly) (result Poly) {
 		b[i].Xor(&a[i], &b[i])
 	}
 	*p = b
-	return b
+	return *p
 }
