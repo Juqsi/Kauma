@@ -31,6 +31,6 @@ func (p *Poly) Reduce() Poly {
 			return *p
 		}
 	}
-	*p = (*p)[:1]
+	*p = Poly{utils.NewLongFromBigInt(*big.NewInt(0)).Int}
 	return *p
 }

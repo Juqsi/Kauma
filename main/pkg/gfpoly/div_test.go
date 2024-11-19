@@ -39,6 +39,50 @@ func TestGfpolyDiv_Execute(t *testing.T) {
 				},
 			},
 		},
+		{
+			title: "Zero divided by something",
+			input: GfpolyDiv{
+				A: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+				B: []string{
+					"0AAAAAAAAAAAAAAAAAAAAA==",
+					"IQAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+			expected: GfpolyDivExpected{
+				Q: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+				R: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+		},
+		{
+			title: "Zero divided by something",
+			input: GfpolyDiv{
+				A: []string{
+					"IAAAAAAAAAAAAAAAAAAAAA==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+				B: []string{
+					"0AAAAAAAAAAAAAAAAAAAAA==",
+					"IQAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+			expected: GfpolyDivExpected{
+				Q: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+				R: []string{
+					"IAAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+		},
 	}
 
 	for _, testcase := range testcases {

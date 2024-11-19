@@ -36,6 +36,6 @@ func (p *Poly) Powmod(a Poly, m Poly, k int) Poly {
 		_, a = new(Poly).Div(a, m)
 		k >>= 1
 	}
-	*p = result
+	*p = result.Reduce()
 	return *p
 }

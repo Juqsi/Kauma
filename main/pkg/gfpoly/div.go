@@ -31,7 +31,9 @@ func (p *Poly) Div(dividend, divisor Poly) (quotient, remainder Poly) {
 		quotient[lenDividen-lenDivisor] = tmp[len(tmp)-1]
 		tmp.Mul(tmp, divisor)
 		dividend.Add(dividend, tmp)
-		dividend = dividend[:len(dividend)-1]
+		if len(dividend) == lenDividen {
+			break
+		}
 	}
-	return quotient, dividend
+	return quotient.Reduce(), dividend.Reduce()
 }

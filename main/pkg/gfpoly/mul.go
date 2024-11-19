@@ -23,6 +23,6 @@ func (p *Poly) Mul(a, b Poly) Poly {
 			result[indexA+indexB].Xor(&result[indexA+indexB], &c)
 		}
 	}
-	*p = result
+	*p = result.Reduce()
 	return *p
 }
