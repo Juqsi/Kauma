@@ -38,6 +38,41 @@ func TestGfpolyAdd_Execute(t *testing.T) {
 				},
 			},
 		},
+		{
+			title: "two empty polynomials",
+			input: GfpolyAdd{
+				A: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+				B: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+			expected: GfpolyAddExpected{
+				S: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+		},
+		{
+			title: "two empty polynomials",
+			input: GfpolyAdd{
+				A: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==", "AAAAAAAAAAAAAAAAAAAAAA==", "AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+				B: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+			expected: GfpolyAddExpected{
+				S: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+		},
 	}
 
 	for _, testcase := range testcases {

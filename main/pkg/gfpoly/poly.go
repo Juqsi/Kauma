@@ -31,5 +31,6 @@ func (p *Poly) Reduce() Poly {
 			return *p
 		}
 	}
+	*p = (*p)[:1]
 	return *p
 }
