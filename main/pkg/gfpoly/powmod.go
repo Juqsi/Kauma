@@ -20,13 +20,14 @@ func (g *GfpolyPowmod) Execute() {
 }
 
 func (p *Poly) Powmod(a Poly, m Poly, k int) Poly {
-	result := make(Poly, len(m))
-	result[0] = utils.NewLongFromBigInt(*big.NewInt(1)).Int
+	var result Poly
 	if k == 0 {
-		result = append(result, utils.NewLongFromBigInt(*big.NewInt(1)).Int)
+		result = Poly{utils.NewLongFromBigInt(*big.NewInt(1)).Int}
 		*p = result
 		return result
 	}
+	result = make(Poly, len(m))
+	result[0] = utils.NewLongFromBigInt(*big.NewInt(1)).Int
 	for k > 0 {
 		if k&1 == 1 {
 			result.Mul(result, a)

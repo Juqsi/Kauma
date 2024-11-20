@@ -16,7 +16,7 @@ func TestGfpolyPow_Execute(t *testing.T) {
 		expected GfpolyPowExpected
 	}{
 		{
-			title: "Basic Test Encode aes",
+			title: "Basic Test",
 			input: GfpolyPow{
 				A: []string{
 					"JAAAAAAAAAAAAAAAAAAAAA==",
@@ -34,6 +34,22 @@ func TestGfpolyPow_Execute(t *testing.T) {
 					"ACgCQAAAAAAAAAAAAAAAAA==",
 					"AAAMAAAAAAAAAAAAAAAAAA==",
 					"AAAAAgAAAAAAAAAAAAAAAA==",
+				},
+			},
+		},
+		{
+			title: "exponent 0",
+			input: GfpolyPow{
+				A: []string{
+					"JAAAAAAAAAAAAAAAAAAAAA==",
+					"wAAAAAAAAAAAAAAAAAAAAA==",
+					"ACAAAAAAAAAAAAAAAAAAAA==",
+				},
+				K: 0,
+			},
+			expected: GfpolyPowExpected{
+				Z: []string{
+					"gAAAAAAAAAAAAAAAAAAAAA==",
 				},
 			},
 		},

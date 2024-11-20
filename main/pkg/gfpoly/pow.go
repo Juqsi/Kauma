@@ -18,12 +18,13 @@ func (g *GfpolyPow) Execute() {
 }
 
 func (p *Poly) Pow(a Poly, n int) Poly {
-	result := make(Poly, len(a))
+	var result Poly
 	if n == 0 {
-		result = append(result, utils.NewLongFromBigInt(*big.NewInt(1)).Int)
+		result = Poly{utils.NewLongFromBigInt(*big.NewInt(1)).Int}
 		*p = result
 		return result
 	}
+	result = make(Poly, len(a))
 	copy(result, a)
 	for i := 0; i < n-1; i++ {
 		result.Mul(result, a)
