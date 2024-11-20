@@ -5,7 +5,6 @@ import (
 	"crypto/aes"
 	"fmt"
 	"math/big"
-	"os"
 )
 
 type Sea128 struct {
@@ -30,14 +29,11 @@ func (s *Sea128) Execute() {
 	} else if s.Mode == "decrypt" {
 		a, err = Sea128Decrypt(key, message)
 	} else {
-		s.Result = "Invalid mode"
-		fmt.Fprintf(os.Stderr, "Error: %+v\n", *s)
-		return
+		panic(fmt.Sprintf("Error invalid mode: %+v\n", *s))
 	}
 
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %+v, %s\n", *s, err.Error())
-		s.Result = err.Error()
+		panic(fmt.Sprintf("Error: %+v, %s\n", *s, err.Error()))
 		return
 	}
 

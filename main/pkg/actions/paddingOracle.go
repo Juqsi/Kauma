@@ -6,7 +6,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
-	"os"
 )
 
 const PADDING_ORACLE_BLOCKSIZE = 16
@@ -55,20 +54,19 @@ func (p *PaddingOracle) executeBlocks(plaintext *[]byte) {
 	for i := 0; i < len(initialCiphertext); i += PADDING_ORACLE_BLOCKSIZE {
 		conn, err := net.Dial("tcp", p.Hostname+":"+fmt.Sprint(p.Port))
 		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "Error: failed to connect to server \n %v:", err)
+			panic(fmt.Sprintf("Error: failed to connect to server \n %v:", err))
 			return
 		}
 		defer func(conn net.Conn) {
 			err := conn.Close()
 			if err != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "Error: failed to close connection \n %v:", err)
+				panic(fmt.Sprintf("Error: failed to close connection \n %v:", err))
 			}
 		}(conn)
 		ciphertext := initialCiphertext[i : i+PADDING_ORACLE_BLOCKSIZE]
 		err = sendMessage(conn, ciphertext)
 		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "Error send init ciphertext message: %v", err)
-			return
+			panic(fmt.Sprintf("Error send init ciphertext message: %v", err))
 		}
 		plaintextBlock := make([]byte, PADDING_ORACLE_BLOCKSIZE)
 		qBlocks := make([]byte, PADDING_ORACLE_BLOCKSIZE)
@@ -92,23 +90,20 @@ func (p *PaddingOracle) executeByteIndex(conn net.Conn, plaintextBlock, qBlocks 
 		binary.LittleEndian.PutUint16(lengthField, uint16(endI-startI))
 		err := sendMessage(conn, lengthField)
 		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "Error: %v", err)
-			continue
+			panic(fmt.Sprintf("byteExecute: %v", err))
 		}
 		for i := startI; i < endI; i++ {
 			// Step 3: Send Q-block (16 bytes)
 			qBlocks[PADDING_ORACLE_BLOCKSIZE-byteIndex] = byte(i)
 			err = sendMessage(conn, qBlocks)
 			if err != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "Error sending qBlock ByteIndex: %d, i: %d:\n %v", byteIndex, i, err)
-				continue
+				panic(fmt.Sprintf("Error sending qBlock ByteIndex: %d, i: %d:\n %v", byteIndex, i, err))
 			}
 		}
 		// Step 4: Receive response (l bytes)
 		response, err := receiveMessage(conn, endI-startI)
 		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "Error: %v", err)
-			continue
+			panic(fmt.Sprintf("Error: %v", err))
 		}
 		//multiple true responses
 		if len(response) != 1 {
@@ -116,22 +111,19 @@ func (p *PaddingOracle) executeByteIndex(conn net.Conn, plaintextBlock, qBlocks 
 			binary.LittleEndian.PutUint16(newLengthField, uint16(len(response)))
 			err = sendMessage(conn, newLengthField)
 			if err != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "multiple true check: Error sending qBlock ByteIndex: %d, i: %v:\n %v", byteIndex, response, err)
-				continue
+				panic(fmt.Sprintf("multiple true check: Error sending qBlock ByteIndex: %d, i: %v:\n %v", byteIndex, response, err))
 			}
 			for _, q := range response {
 				qBlocks[PADDING_ORACLE_BLOCKSIZE-byteIndex-1] = byte(q ^ 0xff)
 				qBlocks[PADDING_ORACLE_BLOCKSIZE-byteIndex] = byte(q)
 				err = sendMessage(conn, qBlocks)
 				if err != nil {
-					_, _ = fmt.Fprintf(os.Stderr, "multiple true check: Error sending qBlock ByteIndex: %d, i: %d:\n %v", byteIndex, q, err)
-					continue
+					panic(fmt.Sprintf("multiple true check: Error sending qBlock ByteIndex: %d, i: %d:\n %v", byteIndex, q, err))
 				}
 			}
 			NewResponse, err := receiveMessage(conn, len(response))
 			if err != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "Error: %v", err)
-				continue
+				panic(fmt.Sprintf("Error: %v", err))
 			}
 			response[0] = response[NewResponse[0]]
 		}

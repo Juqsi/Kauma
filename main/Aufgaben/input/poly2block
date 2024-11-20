@@ -102,7 +102,7 @@
            "tweak": "6VXORr+YYHrd2nVe0OlA+Q==",
            "input": "lr/ItaYGFXCtHhdPndE65yg7u/GIdM9wscABiiFOUH2Sbyc2UFMlIRSMnZrYCW1a"
            }
-        }
+        },
         "b856d760-023d-4b00-bad6-15d2b6da24fe": {
            "action": "xex",
            "arguments": {
@@ -111,7 +111,6 @@
            "tweak": "6VXORr+YYHrd2nVe0OlA+Q==",
            "input": "lr/ItaYGFXCtHhdPndE65yg7u/GIdM9wscABiiFOUH2Sbyc2UFMlIRSMnZrYCW1a"
            }
-        },
-
+        }
    }
 }

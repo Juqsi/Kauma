@@ -10,6 +10,7 @@ import (
 
 func runTestcases(testCases models.TestcaseFile) (string, error) {
 	result := make(map[string]map[string]interface{})
+	handlerCounts := make(map[string]int)
 
 	handlers := map[string]func([]byte) (map[string]interface{}, error){
 		"poly2block":     handlePoly2Block,
@@ -32,12 +33,14 @@ func runTestcases(testCases models.TestcaseFile) (string, error) {
 		func(key string, testCase models.Testcase) {
 			defer func() {
 				if r := recover(); r != nil {
-					fmt.Fprintf(os.Stderr, "Error in testcase %s: %v\n", testCase.Arguments, r)
+					fmt.Fprintf(os.Stderr, "Error in testcase \n action: %s \n Arguments: %s: %v\n", testCase.Action, testCase.Arguments, r)
 					fmt.Fprintf(os.Stderr, "Stacktrace:\n%s\n", debug.Stack())
+					handlerCounts[testCase.Action+"-recoverd"]++
 				}
 			}()
 
 			if handler, found := handlers[testCase.Action]; found {
+				handlerCounts[testCase.Action]++
 				if res, err := handler(testCase.Arguments); err == nil {
 					result[key] = res
 				} else {
@@ -54,5 +57,10 @@ func runTestcases(testCases models.TestcaseFile) (string, error) {
 	}{Response: result}
 
 	a, _ := json.Marshal(res)
+
+	stats, _ := json.Marshal(handlerCounts)
+
+	fmt.Fprintf(os.Stderr, "Statistik: \n %s", stats)
+
 	return string(a), nil
 }

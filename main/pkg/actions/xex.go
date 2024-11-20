@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"math/big"
-	"os"
 )
 
 type Xex struct {
@@ -37,18 +36,14 @@ func (f *Xex) Execute() {
 	var text []byte
 	input, err := base64.StdEncoding.DecodeString(f.Input)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %+v, %s\n", *f, err.Error())
-		f.Result = "Invalid input"
-		return
+		panic(fmt.Sprintf("Error invalid input: %+v, %s\n", *f, err.Error()))
 	}
 	if f.Mode == "encrypt" {
 		text, err = FdeXexEncrypt(key1, encryptedTweak, input)
 	} else if f.Mode == "decrypt" {
 		text, err = FdeXexDecrypt(key1, encryptedTweak, input)
 	} else {
-		fmt.Fprintf(os.Stderr, "Error: %+v, %s\n", *f, err.Error())
-		f.Result = "Invalid mode"
-		return
+		panic(fmt.Sprintf("Error invalid mode: %+v, %s\n", *f, err.Error()))
 	}
 	f.Result = base64.StdEncoding.EncodeToString(text)
 }
