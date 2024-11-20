@@ -37,7 +37,7 @@ func runTestcases(testCases models.TestcaseFile) (string, bool) {
 					errorOccured = true
 					fmt.Fprintf(os.Stderr, "Error in testcase \n action: %s \n Arguments: %s: %v\n", testCase.Action, testCase.Arguments, r)
 					fmt.Fprintf(os.Stderr, "Stacktrace:\n%s\n", debug.Stack())
-					handlerCounts[testCase.Action+"-recoverd"]++
+					handlerCounts[testCase.Action+"-recovered"]++
 				}
 			}()
 

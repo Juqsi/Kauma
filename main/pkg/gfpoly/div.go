@@ -2,6 +2,8 @@ package gfpoly
 
 import (
 	"Abgabe/main/pkg/actions"
+	"Abgabe/main/pkg/utils"
+	"math/big"
 )
 
 type GfpolyDiv struct {
@@ -20,7 +22,12 @@ func (g *GfpolyDiv) Execute() {
 }
 
 func (p *Poly) Div(dividend, divisor Poly) (quotient, remainder Poly) {
+	divisor.Reduce()
+	dividend.Reduce()
 	lenDivisor := len(divisor)
+	if len(dividend) < len(divisor) {
+		return Poly{utils.NewLongFromBigInt(*big.NewInt(0)).Int}, dividend
+	}
 	quotient = make(Poly, len(dividend)-lenDivisor+1)
 	for len(dividend) >= lenDivisor {
 		lenDividen := len(dividend)
