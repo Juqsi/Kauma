@@ -8,9 +8,10 @@ import (
 	"runtime/debug"
 )
 
-func runTestcases(testCases models.TestcaseFile) (string, error) {
+func runTestcases(testCases models.TestcaseFile) (string, bool) {
 	result := make(map[string]map[string]interface{})
 	handlerCounts := make(map[string]int)
+	errorOccured := false
 
 	handlers := map[string]func([]byte) (map[string]interface{}, error){
 		"poly2block":     handlePoly2Block,
@@ -33,6 +34,7 @@ func runTestcases(testCases models.TestcaseFile) (string, error) {
 		func(key string, testCase models.Testcase) {
 			defer func() {
 				if r := recover(); r != nil {
+					errorOccured = true
 					fmt.Fprintf(os.Stderr, "Error in testcase \n action: %s \n Arguments: %s: %v\n", testCase.Action, testCase.Arguments, r)
 					fmt.Fprintf(os.Stderr, "Stacktrace:\n%s\n", debug.Stack())
 					handlerCounts[testCase.Action+"-recoverd"]++
@@ -58,9 +60,10 @@ func runTestcases(testCases models.TestcaseFile) (string, error) {
 
 	a, _ := json.Marshal(res)
 
-	stats, _ := json.Marshal(handlerCounts)
+	if errorOccured {
+		stats, _ := json.Marshal(handlerCounts)
+		_, _ = fmt.Fprintf(os.Stderr, "Statistik: \n %s", stats)
+	}
 
-	fmt.Fprintf(os.Stderr, "Statistik: \n %s", stats)
-
-	return string(a), nil
+	return string(a), errorOccured
 }

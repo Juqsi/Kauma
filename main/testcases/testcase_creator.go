@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func RunTestcases() string {
+func RunTestcases() (string, bool) {
 	argsWithProg := os.Args
 	if len(argsWithProg) != 2 {
 		panic("Wrong number of arguments")
@@ -18,8 +18,7 @@ func RunTestcases() string {
 	if err != nil {
 		panic("Fehler beim Unmarshaling: " + err.Error())
 	}
-	result, err := runTestcases(testcases)
-	return result
+	return runTestcases(testcases)
 }
 
 func getTestCasesFromJSON(jsonData string) (models.TestcaseFile, error) {
