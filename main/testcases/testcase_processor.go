@@ -14,20 +14,23 @@ func runTestcases(testCases models.TestcaseFile) (string, bool) {
 	errorOccured := false
 
 	handlers := map[string]func([]byte) (map[string]interface{}, error){
-		"poly2block":     handlePoly2Block,
-		"block2poly":     handleBlock2Poly,
-		"gfmul":          handleGfmul,
-		"sea128":         handleSea128,
-		"xex":            handleXex,
-		"padding_oracle": handlePaddingOracle,
-		"gcm_encrypt":    handleGcmEncrypt,
-		"gcm_decrypt":    handleGcmDecrypt,
-		"gfpoly_add":     handleGfpolyAdd,
-		"gfpoly_mul":     handleGfpolyMul,
-		"gfpoly_pow":     handleGfpolyPow,
-		"gfdiv":          handleGfdiv,
-		"gfpoly_divmod":  handleGfpolydiv,
-		"gfpoly_powmod":  handleGfpolypowmod,
+		"poly2block":        handlePoly2Block,
+		"block2poly":        handleBlock2Poly,
+		"gfmul":             handleGfmul,
+		"sea128":            handleSea128,
+		"xex":               handleXex,
+		"padding_oracle":    handlePaddingOracle,
+		"gcm_encrypt":       handleGcmEncrypt,
+		"gcm_decrypt":       handleGcmDecrypt,
+		"gfpoly_add":        handleGfpolyAdd,
+		"gfpoly_mul":        handleGfpolyMul,
+		"gfpoly_pow":        handleGfpolyPow,
+		"gfdiv":             handleGfdiv,
+		"gfpoly_divmod":     handleGfpolyDiv,
+		"gfpoly_powmod":     handleGfpolyPowmod,
+		"gfpoly_sort":       handleGfpolySort,
+		"gfpoly_make_monic": handleGfpolyMakeMonic,
+		"gfpoly_sqrt":       handleGfpolySqrt,
 	}
 
 	for key, testCase := range testCases.Testcases {
@@ -35,8 +38,8 @@ func runTestcases(testCases models.TestcaseFile) (string, bool) {
 			defer func() {
 				if r := recover(); r != nil {
 					errorOccured = true
-					fmt.Fprintf(os.Stderr, "Error in testcase \n action: %s \n Arguments: %s: %v\n", testCase.Action, testCase.Arguments, r)
-					fmt.Fprintf(os.Stderr, "Stacktrace:\n%s\n", debug.Stack())
+					_, _ = fmt.Fprintf(os.Stderr, "Error in testcase \n action: %s \n Arguments: %s: %v\n", testCase.Action, testCase.Arguments, r)
+					_, _ = fmt.Fprintf(os.Stderr, "Stacktrace:\n%s\n", debug.Stack())
 					handlerCounts[testCase.Action+"-recovered"]++
 				}
 			}()
@@ -46,10 +49,10 @@ func runTestcases(testCases models.TestcaseFile) (string, bool) {
 				if res, err := handler(testCase.Arguments); err == nil {
 					result[key] = res
 				} else {
-					fmt.Fprintf(os.Stderr, "(Marshal-) Error in testcase %s: %v\n", key, err)
+					_, _ = fmt.Fprintf(os.Stderr, "(Marshal-) Error in testcase %s: %v\n", key, err)
 				}
 			} else {
-				fmt.Fprintf(os.Stderr, "Unknown action: %s\n", testCase.Action)
+				_, _ = fmt.Fprintf(os.Stderr, "Unknown action: %s\n", testCase.Action)
 			}
 		}(key, testCase)
 	}

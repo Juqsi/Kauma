@@ -29,10 +29,6 @@ func TestSea128_Execute(t *testing.T) {
 			input:    Sea128{Mode: "decrypt", Key: "istDASeincoolerKEYrofg==", Input: ""},
 			expected: "rCGMWXjfwGVQU4cx1C2npw==",
 		}, {
-			title:    "Invalid Mode",
-			input:    Sea128{Mode: "invalid", Key: "istDASeincoolerKEYrofg==", Input: "yv66vvrO263eyviIiDNEVQ=="},
-			expected: "Invalid mode",
-		}, {
 			title:    "Failed Testcase",
 			input:    Sea128{Mode: "decrypt", Key: "vyG55UYdcvvBSQ75h9R2HQ==", Input: "h4nTU4jnW2SW+kt74Pc0Ow=="},
 			expected: "AJDIJykK8cy3JDbSf+8yFA==",

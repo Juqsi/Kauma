@@ -42,7 +42,7 @@ func TestGfpolyMul_Execute(t *testing.T) {
 	for _, testcase := range testcases {
 		t.Run(testcase.title, func(t *testing.T) {
 			testcase.input.Execute()
-			assert.Equal(t, testcase.expected.P, testcase.input.P, "P: Expected %v, got %v", testcase.expected.P, testcase.input.P)
+			assert.Equal(t, testcase.expected.P, testcase.input.P, "P: Expected \n %v\n, got\n %v", testcase.expected.P, testcase.input.P)
 		})
 	}
 }

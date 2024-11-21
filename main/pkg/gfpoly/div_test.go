@@ -82,7 +82,8 @@ func TestGfpolyDiv_Execute(t *testing.T) {
 					"IAAAAAAAAAAAAAAAAAAAAA==",
 				},
 			},
-		}, {
+		},
+		{
 			title: "divisor bigger than dividend",
 			input: GfpolyDiv{
 				A: []string{"NeverGonnaGiveYouUpAAA=="}, B: []string{"AAAAAAAAAAAAAAAAAAAAAA==", "AAAAAAAAAAAAAAAAAAAAAA==", "NeverGonnaLetYouDownAA=="},

@@ -6,13 +6,30 @@ import (
 )
 
 type Poly []big.Int
+type Polys []Poly
 
 func NewPolyFromBase64(poly []string) *Poly {
-	var p Poly
-	for _, s := range poly {
-		p = append(p, utils.NewBigEndianLongFromGcmInBase64(s).Int)
+	p := make(Poly, len(poly))
+	for i, s := range poly {
+		p[i] = utils.NewBigEndianLongFromGcmInBase64(s).Int
 	}
 	return &p
+}
+
+func NewPolyListFromBase64(polys [][]string) *Polys {
+	p := make(Polys, len(polys))
+	for i, poly := range polys {
+		p[i] = *NewPolyFromBase64(poly)
+	}
+	return &p
+}
+
+func (polys *Polys) Base64() [][]string {
+	result := make([][]string, len(*polys))
+	for i, poly := range *polys {
+		result[i] = poly.Base64()
+	}
+	return result
 }
 
 func (p *Poly) Base64() []string {
@@ -33,4 +50,8 @@ func (p *Poly) Reduce() Poly {
 	}
 	*p = Poly{utils.NewLongFromBigInt(*big.NewInt(0)).Int}
 	return *p
+}
+
+func (p *Poly) Degree() int {
+	return len(*p)
 }

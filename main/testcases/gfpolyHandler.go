@@ -31,7 +31,7 @@ func handleGfpolyPow(argsData []byte) (map[string]interface{}, error) {
 	args.Execute()
 	return map[string]interface{}{"Z": args.Z}, nil
 }
-func handleGfpolydiv(argsData []byte) (map[string]interface{}, error) {
+func handleGfpolyDiv(argsData []byte) (map[string]interface{}, error) {
 	args := new(gfpoly.GfpolyDiv)
 	if err := json.Unmarshal(argsData, &args); err != nil {
 		return nil, err
@@ -39,11 +39,36 @@ func handleGfpolydiv(argsData []byte) (map[string]interface{}, error) {
 	args.Execute()
 	return map[string]interface{}{"Q": args.Q, "R": args.R}, nil
 }
-func handleGfpolypowmod(argsData []byte) (map[string]interface{}, error) {
+func handleGfpolyPowmod(argsData []byte) (map[string]interface{}, error) {
 	args := new(gfpoly.GfpolyPowmod)
 	if err := json.Unmarshal(argsData, &args); err != nil {
 		return nil, err
 	}
 	args.Execute()
 	return map[string]interface{}{"Z": args.Z}, nil
+}
+func handleGfpolySort(argsData []byte) (map[string]interface{}, error) {
+	args := new(gfpoly.GfpolySort)
+	if err := json.Unmarshal(argsData, &args); err != nil {
+		return nil, err
+	}
+	args.Execute()
+	return map[string]interface{}{"sorted_polys": args.SortedPolys}, nil
+}
+func handleGfpolyMakeMonic(argsData []byte) (map[string]interface{}, error) {
+	args := new(gfpoly.GfpolyMakeMonic)
+	if err := json.Unmarshal(argsData, &args); err != nil {
+		return nil, err
+	}
+	args.Execute()
+	return map[string]interface{}{"A*": args.ASternchen}, nil
+}
+
+func handleGfpolySqrt(argsData []byte) (map[string]interface{}, error) {
+	args := new(gfpoly.GfpolySqrt)
+	if err := json.Unmarshal(argsData, &args); err != nil {
+		return nil, err
+	}
+	args.Execute()
+	return map[string]interface{}{"S": args.S}, nil
 }

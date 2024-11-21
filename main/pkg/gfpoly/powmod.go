@@ -19,7 +19,7 @@ func (g *GfpolyPowmod) Execute() {
 	g.Z = polyA.Base64()
 }
 
-func (p *Poly) Powmod(a Poly, m Poly, k int) Poly {
+func (p *Poly) Powmod(a, m Poly, k int) Poly {
 	var result Poly
 	if k == 0 {
 		result = Poly{utils.NewLongFromBigInt(*big.NewInt(1)).Int}
