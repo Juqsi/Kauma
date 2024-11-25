@@ -6,6 +6,8 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
+	"os"
+	"time"
 )
 
 const PADDING_ORACLE_BLOCKSIZE = 16
@@ -28,7 +30,11 @@ func sendMessage(conn net.Conn, message []byte) error {
 
 func receiveMessage(conn net.Conn, length int) ([]uint, error) {
 	buffer := make([]byte, length)
-	_, err := conn.Read(buffer)
+	err := conn.SetReadDeadline(time.Now().Add(5 * time.Second))
+	if err != nil {
+		return []uint{}, fmt.Errorf("failed to set Timeout: %v", err)
+	}
+	_, err = conn.Read(buffer)
 	if err != nil {
 		return []uint{}, fmt.Errorf("failed to receive message: %v", err)
 	}
@@ -125,6 +131,9 @@ func (p *PaddingOracle) executeByteIndex(conn net.Conn, plaintextBlock, qBlocks 
 			if err != nil {
 				panic(fmt.Sprintf("Error: %v", err))
 			}
+			_, _ = fmt.Fprintf(os.Stderr, "NewResponses %v\n", NewResponse)
+			_, _ = fmt.Fprintf(os.Stderr, "Responses %v\n", response)
+
 			response[0] = response[NewResponse[0]]
 		}
 		// berechnen von D(c)i = pi xor qi

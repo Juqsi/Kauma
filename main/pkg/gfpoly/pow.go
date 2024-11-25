@@ -29,6 +29,6 @@ func (p *Poly) Pow(a Poly, n int) Poly {
 	for i := 0; i < n-1; i++ {
 		result.Mul(result, a)
 	}
-	*p = result.Reduce()
+	*p = result.CutLeadingZeroFaktors()
 	return *p
 }

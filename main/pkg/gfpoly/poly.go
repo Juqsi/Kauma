@@ -6,7 +6,6 @@ import (
 )
 
 type Poly []big.Int
-type Polys []Poly
 
 func NewPolyFromBase64(poly []string) *Poly {
 	p := make(Poly, len(poly))
@@ -14,22 +13,6 @@ func NewPolyFromBase64(poly []string) *Poly {
 		p[i] = utils.NewBigEndianLongFromGcmInBase64(s).Int
 	}
 	return &p
-}
-
-func NewPolyListFromBase64(polys [][]string) *Polys {
-	p := make(Polys, len(polys))
-	for i, poly := range polys {
-		p[i] = *NewPolyFromBase64(poly)
-	}
-	return &p
-}
-
-func (polys *Polys) Base64() [][]string {
-	result := make([][]string, len(*polys))
-	for i, poly := range *polys {
-		result[i] = poly.Base64()
-	}
-	return result
 }
 
 func (p *Poly) Base64() []string {
@@ -40,7 +23,8 @@ func (p *Poly) Base64() []string {
 	return s
 }
 
-func (p *Poly) Reduce() Poly {
+// TODO changr to Square multiply
+func (p *Poly) CutLeadingZeroFaktors() Poly {
 	lenP := len(*p)
 	for i := lenP; i > 0; i-- {
 		if (*p)[i-1].Sign() != 0 {
@@ -53,5 +37,41 @@ func (p *Poly) Reduce() Poly {
 }
 
 func (p *Poly) Degree() int {
-	return len(*p)
+	p.CutLeadingZeroFaktors()
+	l := len(*p)
+	if l == 1 && (*p)[0].Sign() == 0 {
+		return -1
+	}
+	return l - 1
+}
+
+func (p *Poly) IsZero() bool {
+	return p.Degree() == -1
+}
+
+// Cmp compares x and y and returns:
+//   - -1 if x < y;
+//   - 0 if x == y;
+//   - +1 if x > y.
+func (p *Poly) Cmp(x, y Poly) int {
+	xDegree := x.Degree()
+	yDegree := y.Degree()
+	if xDegree != yDegree {
+		if xDegree > yDegree {
+			return 1
+		} else {
+			return -1
+		}
+	} else if xDegree == yDegree {
+		index := xDegree
+		for index >= 0 {
+			a := x[index].CmpAbs(&y[index])
+			if a != 0 {
+				return a
+			}
+			index--
+		}
+		return 0
+	}
+	panic("should not happen Cmp Factor")
 }

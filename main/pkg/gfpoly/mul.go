@@ -1,6 +1,8 @@
 package gfpoly
 
-import "Abgabe/main/pkg/actions"
+import (
+	"Abgabe/main/pkg/actions"
+)
 
 type GfpolyMul struct {
 	A []string `json:"A"`
@@ -23,6 +25,6 @@ func (p *Poly) Mul(a, b Poly) Poly {
 			result[indexA+indexB].Xor(&result[indexA+indexB], &c)
 		}
 	}
-	*p = result.Reduce()
+	*p = result.CutLeadingZeroFaktors()
 	return *p
 }

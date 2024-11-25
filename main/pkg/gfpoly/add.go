@@ -20,6 +20,6 @@ func (p *Poly) Add(a, b Poly) (result Poly) {
 	for i := 0; i < len(a); i++ {
 		b[i].Xor(&a[i], &b[i])
 	}
-	*p = b.Reduce()
+	*p = b.CutLeadingZeroFaktors()
 	return *p
 }

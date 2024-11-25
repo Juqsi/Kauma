@@ -22,8 +22,8 @@ func (g *GfpolyDiv) Execute() {
 }
 
 func (p *Poly) Div(dividend, divisor Poly) (quotient, remainder Poly) {
-	divisor.Reduce()
-	dividend.Reduce()
+	divisor.CutLeadingZeroFaktors()
+	dividend.CutLeadingZeroFaktors()
 	lenDivisor := len(divisor)
 	if len(dividend) < len(divisor) {
 		return Poly{utils.NewLongFromBigInt(*big.NewInt(0)).Int}, dividend
@@ -42,5 +42,5 @@ func (p *Poly) Div(dividend, divisor Poly) (quotient, remainder Poly) {
 			break
 		}
 	}
-	return quotient.Reduce(), dividend.Reduce()
+	return quotient.CutLeadingZeroFaktors(), dividend.CutLeadingZeroFaktors()
 }

@@ -29,6 +29,6 @@ func (p *Poly) Sqrt(q Poly, m big.Int) *Poly {
 			sqrt[i/2] = actions.Pow(&t, exp)
 		}
 	}
-	*p = sqrt.Reduce()
+	*p = sqrt.CutLeadingZeroFaktors()
 	return p
 }

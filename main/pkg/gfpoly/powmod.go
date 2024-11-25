@@ -37,6 +37,6 @@ func (p *Poly) Powmod(a, m Poly, k int) Poly {
 		_, a = new(Poly).Div(a, m)
 		k >>= 1
 	}
-	*p = result.Reduce()
+	*p = result.CutLeadingZeroFaktors()
 	return *p
 }

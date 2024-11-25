@@ -97,6 +97,67 @@ func TestGfpolyDiv_Execute(t *testing.T) {
 				},
 			},
 		},
+		{
+			title: "rest 0",
+			input: GfpolyDiv{
+				A: []string{"DNWpXnnY24XecPa7a8vrEA==",
+					"I8uYpCbsiPaVvUznuv1IcA==",
+					"wsbiU432ARWuO93He3vbvA==",
+					"zp0g3o8iNz7Y+8oUxw1vJw==",
+					"J0GekE3uendpN6WUAuJ4AA==",
+					"wACd0e6u1ii4AAAAAAAAAA==",
+					"ACAAAAAAAAAAAAAAAAAAAA==",
+				}, B: []string{
+					"NeverGonnaMakeYouCryAA==",
+					"NeverGonnaSayGoodbyeAA==",
+					"NeverGonnaTellALieAAAA==",
+					"AndHurtYouAAAAAAAAAAAA==",
+					"gAAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+			expected: GfpolyDivExpected{
+				Q: []string{
+					"JAAAAAAAAAAAAAAAAAAAAA==",
+					"wAAAAAAAAAAAAAAAAAAAAA==",
+					"ACAAAAAAAAAAAAAAAAAAAA==",
+				},
+				R: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+		},
+		{
+			title: "rest 0",
+			input: GfpolyDiv{
+				A: []string{
+					"I20VjJmlSnRSe88gaDiLRQ==",
+					"0Cw5HxJm/pfybJoQDf7/4w==",
+					"8ByrMMf+vVj5r3YXUNCJ1g==",
+					"rEU/f2UZRXqmZ6V7EPKfBA==",
+					"LfdALhvCrdhhGZWl9l9DSg==",
+					"KSUKhN0n6/DZmHPozd1prw==",
+					"DQrRkuA9Zx279wAAAAAAAA==",
+					"AhCEAAAAAAAAAAAAAAAAAA==",
+				}, B: []string{
+					"NeverGonnaMakeYouCryAA==",
+					"NeverGonnaSayGoodbyeAA==",
+					"NeverGonnaTellALieAAAA==",
+					"AndHurtYouAAAAAAAAAAAA==",
+					"gAAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+			expected: GfpolyDivExpected{
+				Q: []string{
+					"50AAAAAAAAAAAAAAAAAAAA==",
+					"KcQAAAAAAAAAAAAAAAAAAA==",
+					"DQNAAAAAAAAAAAAAAAAAAA==",
+					"AhCEAAAAAAAAAAAAAAAAAA==",
+				},
+				R: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+		},
 	}
 
 	for _, testcase := range testcases {
