@@ -6,6 +6,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
+	"os"
 	"time"
 )
 
@@ -109,6 +110,13 @@ func (p *PaddingOracle) executeByteIndex(conn net.Conn, plaintextBlock, qBlocks 
 		response, err := receiveMessage(conn, endI-startI)
 		if err != nil {
 			panic(fmt.Sprintf("Error: %v", err))
+		}
+		if len(response) == 0 {
+			_, _ = fmt.Fprintf(os.Stderr, "startI %v \n", startI)
+			_, _ = fmt.Fprintf(os.Stderr, "endI %v \n", endI)
+			_, _ = fmt.Fprintf(os.Stderr, "ByteIndex %v \n", byteIndex)
+			_, _ = fmt.Fprintf(os.Stderr, "QBlocks %v \n", qBlocks)
+			_, _ = fmt.Fprintf(os.Stderr, "PlaintextBlock %v \n", plaintextBlock)
 		}
 		//multiple true responses
 		if len(response) == 2 {

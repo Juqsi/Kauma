@@ -2,7 +2,6 @@ package actions
 
 import (
 	"Abgabe/main/pkg/utils"
-	"fmt"
 	"math/big"
 )
 
@@ -17,7 +16,6 @@ func (g *Gfdiv) Execute() {
 	factor2 := utils.NewBigEndianLongFromGcmInBase64(g.Factor2).Int
 
 	result := Gfdiv128(factor1, factor2)
-	fmt.Println(result.Text(16))
 	g.Result = utils.NewLongFromBigInt(result).GcmToggle().GetBase64(16)
 }
 
