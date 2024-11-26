@@ -2,6 +2,7 @@ package actions
 
 import (
 	"Abgabe/main/pkg/utils"
+	"fmt"
 	"math/big"
 )
 
@@ -16,6 +17,7 @@ func (g *Gfdiv) Execute() {
 	factor2 := utils.NewBigEndianLongFromGcmInBase64(g.Factor2).Int
 
 	result := Gfdiv128(factor1, factor2)
+	fmt.Println(result.Text(16))
 	g.Result = utils.NewLongFromBigInt(result).GcmToggle().GetBase64(16)
 }
 
@@ -24,9 +26,44 @@ func Gfdiv128(a, b big.Int) big.Int {
 }
 
 func GfdivBigInt(a, b, reduce big.Int) big.Int {
-	// Inverse of b -> 2^128-2
-	exp := *new(big.Int).Sub(new(big.Int).Lsh(big.NewInt(1), 128), big.NewInt(2))
-	return GfmulBigInt(a, Pow(&b, &exp), reduce)
+	bInverse := GfInverseBigInt(b, reduce)
+	return GfmulBigInt(a, bInverse, reduce)
+}
+
+func GfInverseBigInt(b, reduce big.Int) big.Int {
+	var u, v, g1, g2 big.Int
+
+	u.Set(&b)
+	v.Set(&reduce)
+	g1.SetInt64(1)
+	g2.SetInt64(0)
+
+	for v.Sign() != 0 {
+		degU := u.BitLen() - 1
+		degV := v.BitLen() - 1
+		shift := degU - degV
+
+		if shift >= 0 {
+			// Reduktion von u
+			tempV := new(big.Int).Lsh(&v, uint(shift)) // v * x^shift
+			u.Xor(&u, tempV)                           // u = u - v * x^shift (XOR)
+
+			// Reduktion von g1
+			tempG2 := new(big.Int).Lsh(&g2, uint(shift))
+			g1.Xor(&g1, tempG2) // g1 = g1 - g2 * x^shift (XOR)
+		}
+
+		// Tausche u <-> v und g1 <-> g2
+		u, v = v, u
+		g1, g2 = g2, g1
+	}
+
+	inverseLen := g1.BitLen()
+	reverseLen := reduce.BitLen()
+	if inverseLen >= reverseLen {
+		g1.Xor(&g1, reduce.Lsh(&reduce, uint(inverseLen-reverseLen)))
+	}
+	return g1
 }
 
 func Pow(a, exponent *big.Int) big.Int {

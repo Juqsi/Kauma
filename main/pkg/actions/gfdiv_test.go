@@ -16,6 +16,11 @@ func TestGfdiv_Execute(t *testing.T) {
 			input:    Gfdiv{Factor1: "JAAAAAAAAAAAAAAAAAAAAA==", Factor2: "wAAAAAAAAAAAAAAAAAAAAA=="},
 			expected: "OAAAAAAAAAAAAAAAAAAAAA==",
 		},
+		{
+			title:    "Basic Test",
+			input:    Gfdiv{Factor1: "JAAAAAAAAAAAAAAAAAAAAA==", Factor2: "JAAAAAAAAAAAAAAAAAAAAA=="},
+			expected: "gAAAAAAAAAAAAAAAAAAAAA==",
+		},
 	}
 
 	for _, testcase := range testcases {

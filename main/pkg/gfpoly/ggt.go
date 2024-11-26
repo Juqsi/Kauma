@@ -9,18 +9,18 @@ type GfpolyGgt struct {
 func (g *GfpolyGgt) Execute() {
 	polyA := NewPolyFromBase64(g.A)
 	polyB := NewPolyFromBase64(g.B)
-	polyA.Gcd(*polyA, *polyB)
+	polyA.Gcd(polyA, polyB)
 	g.G = polyA.Base64()
 }
 
-func (p *Poly) Gcd(a, b Poly) Poly {
+func (p *Poly) Gcd(a, b *Poly) *Poly {
 	if a.IsZero() {
-		*p = b
-		return *p
+		*p = *b
+		return p
 	}
 	if b.IsZero() {
-		*p = a
-		return *p
+		*p = *a
+		return p
 	}
 	if a.Cmp(a, b) == -1 {
 		return p.Gcd(b, a)
@@ -29,6 +29,5 @@ func (p *Poly) Gcd(a, b Poly) Poly {
 	if !remainder.IsZero() {
 		return p.Gcd(b, remainder)
 	}
-	*p = b.makeMonic()
-	return *p
+	return p.makeMonic(b)
 }

@@ -23,17 +23,16 @@ func (p *Poly) Base64() []string {
 	return s
 }
 
-// TODO changr to Square multiply
-func (p *Poly) CutLeadingZeroFaktors() Poly {
+func (p *Poly) CutLeadingZeroFaktors() *Poly {
 	lenP := len(*p)
 	for i := lenP; i > 0; i-- {
 		if (*p)[i-1].Sign() != 0 {
 			*p = (*p)[:i]
-			return *p
+			return p
 		}
 	}
 	*p = Poly{utils.NewLongFromBigInt(*big.NewInt(0)).Int}
-	return *p
+	return p
 }
 
 func (p *Poly) Degree() int {
@@ -53,7 +52,7 @@ func (p *Poly) IsZero() bool {
 //   - -1 if x < y;
 //   - 0 if x == y;
 //   - +1 if x > y.
-func (p *Poly) Cmp(x, y Poly) int {
+func (p *Poly) Cmp(x, y *Poly) int {
 	xDegree := x.Degree()
 	yDegree := y.Degree()
 	if xDegree != yDegree {
@@ -65,7 +64,7 @@ func (p *Poly) Cmp(x, y Poly) int {
 	} else if xDegree == yDegree {
 		index := xDegree
 		for index >= 0 {
-			a := x[index].CmpAbs(&y[index])
+			a := (*x)[index].CmpAbs(&(*y)[index])
 			if a != 0 {
 				return a
 			}
@@ -74,4 +73,15 @@ func (p *Poly) Cmp(x, y Poly) int {
 		return 0
 	}
 	panic("should not happen Cmp Factor")
+}
+
+func (p *Poly) DeepCopy() *Poly {
+	if p == nil {
+		return nil
+	}
+	copy := make(Poly, len(*p))
+	for i, v := range *p {
+		copy[i] = *big.NewInt(0).Set(&v)
+	}
+	return &copy
 }

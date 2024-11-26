@@ -1,6 +1,8 @@
 package gfpoly
 
-import "math/big"
+import (
+	"math/big"
+)
 
 type GfpolyDiff struct {
 	F       []string `json:"Q"`
@@ -9,12 +11,14 @@ type GfpolyDiff struct {
 
 func (g *GfpolyDiff) Execute() {
 	polyA := NewPolyFromBase64(g.F)
-	polyA.Diff()
-	g.FStrich = polyA.Base64()
+	polyFStrich := new(Poly)
+	polyFStrich.Diff(polyA)
+	g.FStrich = polyFStrich.Base64()
 }
 
-func (p *Poly) Diff() *Poly {
+func (p *Poly) Diff(a *Poly) *Poly {
 	zero := big.NewInt(0)
+	*p = *a.DeepCopy()
 	for i := range *p {
 		if i&1 == 0 {
 			(*p)[i] = *zero

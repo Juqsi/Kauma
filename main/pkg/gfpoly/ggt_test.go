@@ -59,6 +59,7 @@ func TestGfpolyGgf_Execute(t *testing.T) {
 					"J0GekE3uendpN6WUAuJ4AA==",
 					"wACd0e6u1ii4AAAAAAAAAA==",
 					"ACAAAAAAAAAAAAAAAAAAAA==",
+					"gAAAAAAAAAAAAAAAAAAAAA==",
 				},
 				B: []string{
 					"DNWpXnnY24XecPa7a8vrEA==",
@@ -68,6 +69,7 @@ func TestGfpolyGgf_Execute(t *testing.T) {
 					"J0GekE3uendpN6WUAuJ4AA==",
 					"wACd0e6u1ii4AAAAAAAAAA==",
 					"ACAAAAAAAAAAAAAAAAAAAA==",
+					"gAAAAAAAAAAAAAAAAAAAAA==",
 				},
 			},
 			expected: GfpolyGgtExpected{
@@ -79,6 +81,7 @@ func TestGfpolyGgf_Execute(t *testing.T) {
 					"J0GekE3uendpN6WUAuJ4AA==",
 					"wACd0e6u1ii4AAAAAAAAAA==",
 					"ACAAAAAAAAAAAAAAAAAAAA==",
+					"gAAAAAAAAAAAAAAAAAAAAA==",
 				},
 			},
 		},

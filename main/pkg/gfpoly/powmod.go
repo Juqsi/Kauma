@@ -15,19 +15,19 @@ type GfpolyPowmod struct {
 func (g *GfpolyPowmod) Execute() {
 	polyA := NewPolyFromBase64(g.A)
 	polyM := NewPolyFromBase64(g.M)
-	polyA.Powmod(*polyA, *polyM, g.K)
+	polyA.Powmod(polyA, polyM, g.K)
 	g.Z = polyA.Base64()
 }
 
-func (p *Poly) Powmod(a, m Poly, k int) Poly {
-	var result Poly
+func (p *Poly) Powmod(a, m *Poly, k int) *Poly {
+	var result = new(Poly)
 	if k == 0 {
-		result = Poly{utils.NewLongFromBigInt(*big.NewInt(1)).Int}
-		*p = result
+		result = &Poly{utils.NewLongFromBigInt(*big.NewInt(1)).Int}
+		*p = *result
 		return result
 	}
-	result = make(Poly, len(m))
-	result[0] = utils.NewLongFromBigInt(*big.NewInt(1)).Int
+	*result = make(Poly, len(*m))
+	(*result)[0] = utils.NewLongFromBigInt(*big.NewInt(1)).Int
 	for k > 0 {
 		if k&1 == 1 {
 			result.Mul(result, a)
@@ -37,6 +37,6 @@ func (p *Poly) Powmod(a, m Poly, k int) Poly {
 		_, a = new(Poly).Div(a, m)
 		k >>= 1
 	}
-	*p = result.CutLeadingZeroFaktors()
-	return *p
+	*p = *result.CutLeadingZeroFaktors()
+	return p
 }

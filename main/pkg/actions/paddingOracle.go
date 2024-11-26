@@ -6,7 +6,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
-	"os"
 	"time"
 )
 
@@ -112,7 +111,7 @@ func (p *PaddingOracle) executeByteIndex(conn net.Conn, plaintextBlock, qBlocks 
 			panic(fmt.Sprintf("Error: %v", err))
 		}
 		//multiple true responses
-		if len(response) != 1 {
+		if len(response) == 2 {
 			newLengthField := make([]byte, 2)
 			binary.LittleEndian.PutUint16(newLengthField, uint16(len(response)))
 			err = sendMessage(conn, newLengthField)
@@ -131,8 +130,6 @@ func (p *PaddingOracle) executeByteIndex(conn net.Conn, plaintextBlock, qBlocks 
 			if err != nil {
 				panic(fmt.Sprintf("Error: %v", err))
 			}
-			_, _ = fmt.Fprintf(os.Stderr, "NewResponses %v\n", NewResponse)
-			_, _ = fmt.Fprintf(os.Stderr, "Responses %v\n", response)
 
 			response[0] = response[NewResponse[0]]
 		}

@@ -33,6 +33,73 @@ func TestGfpolyDiff_Execute(t *testing.T) {
 				},
 			},
 		},
+		{
+			title: "even length",
+			input: GfpolyDiff{
+				F: []string{
+					"IJustWannaTellYouAAAAA==",
+					"IJustWannaTellYouAAAAA==",
+					"IJustWannaTellYouAAAAA==",
+					"IJustWannaTellYouAAAAA==",
+					"IJustWannaTellYouAAAAA==",
+					"IJustWannaTellYouAAAAA==",
+				},
+			},
+			expected: GfpolyDiffExpected{
+				FStrich: []string{
+					"IJustWannaTellYouAAAAA==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+					"IJustWannaTellYouAAAAA==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+					"IJustWannaTellYouAAAAA==",
+				},
+			},
+		},
+		{
+			title: "odd length ",
+			input: GfpolyDiff{
+				F: []string{
+					"IJustWannaTellYouAAAAA==",
+					"IJustWannaTellYouAAAAA==",
+					"IJustWannaTellYouAAAAA==",
+					"IJustWannaTellYouAAAAA==",
+					"IJustWannaTellYouAAAAA==",
+				},
+			},
+			expected: GfpolyDiffExpected{
+				FStrich: []string{
+					"IJustWannaTellYouAAAAA==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+					"IJustWannaTellYouAAAAA==",
+				},
+			},
+		},
+		{
+			title: "F is leght 1 ",
+			input: GfpolyDiff{
+				F: []string{
+					"IJustWannaTellYouAAAAA==",
+				},
+			},
+			expected: GfpolyDiffExpected{
+				FStrich: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+		},
+		{
+			title: "F is leght 0 ",
+			input: GfpolyDiff{
+				F: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+			expected: GfpolyDiffExpected{
+				FStrich: []string{
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+		},
 	}
 
 	for _, testcase := range testcases {

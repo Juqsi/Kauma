@@ -15,7 +15,7 @@ func (g *GfpolySort) Execute() {
 
 func (list *Polys) Sort() *Polys {
 	sort.SliceStable(*list, func(i, j int) bool {
-		return (*list)[i].Cmp((*list)[i], (*list)[j]) < 0
+		return (*list)[i].Cmp(&(*list)[i], &(*list)[j]) < 0
 	})
 	return list
 }

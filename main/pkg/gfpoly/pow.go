@@ -13,22 +13,25 @@ type GfpolyPow struct {
 
 func (g *GfpolyPow) Execute() {
 	polyA := NewPolyFromBase64(g.A)
-	polyA.Pow(*polyA, g.K)
+	polyA.Pow(polyA, g.K)
 	g.Z = polyA.Base64()
 }
 
-func (p *Poly) Pow(a Poly, n int) Poly {
-	var result Poly
+func (p *Poly) Pow(a *Poly, n int) *Poly {
+	var result *Poly
 	if n == 0 {
-		result = Poly{utils.NewLongFromBigInt(*big.NewInt(1)).Int}
-		*p = result
+		result = &Poly{utils.NewLongFromBigInt(*big.NewInt(1)).Int}
+		*p = *result
 		return result
 	}
-	result = make(Poly, len(a))
-	copy(result, a)
-	for i := 0; i < n-1; i++ {
-		result.Mul(result, a)
+	result = &Poly{utils.NewLongFromBigInt(*big.NewInt(1)).Int}
+	for n > 0 {
+		if n&1 == 1 {
+			result.Mul(result, a)
+		}
+		a.Mul(a, a)
+		n = n >> 1
 	}
-	*p = result.CutLeadingZeroFaktors()
-	return *p
+	*p = *result.CutLeadingZeroFaktors()
+	return p
 }

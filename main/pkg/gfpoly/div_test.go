@@ -17,7 +17,7 @@ func TestGfpolyDiv_Execute(t *testing.T) {
 		expected GfpolyDivExpected
 	}{
 		{
-			title: "Basic Test Encode aes",
+			title: "Basic Test",
 			input: GfpolyDiv{
 				A: []string{
 					"JAAAAAAAAAAAAAAAAAAAAA==",
