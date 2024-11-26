@@ -1,12 +1,8 @@
 package gfpoly
 
-import (
-	"math/big"
-)
-
 type GfpolyDiff struct {
 	F       []string `json:"Q"`
-	FStrich []string `json:"S"`
+	FStrich []string `json:"F'"`
 }
 
 func (g *GfpolyDiff) Execute() {
@@ -17,15 +13,11 @@ func (g *GfpolyDiff) Execute() {
 }
 
 func (p *Poly) Diff(a *Poly) *Poly {
-	zero := big.NewInt(0)
-	*p = *a.DeepCopy()
-	for i := range *p {
-		if i&1 == 0 {
-			(*p)[i] = *zero
-		}
+	result := make(Poly, len(*a))
+	for i := 1; i < len(*a); i += 2 {
+		result[i-1] = (*a)[i]
 	}
-	*p = append(*p, *zero)
-	*p = (*p)[1:]
-	p.CutLeadingZeroFaktors()
-	return p
+	result.CutLeadingZeroFaktors()
+	*p = result
+	return &result
 }
