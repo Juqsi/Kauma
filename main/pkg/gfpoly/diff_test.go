@@ -100,6 +100,32 @@ func TestGfpolyDiff_Execute(t *testing.T) {
 				},
 			},
 		},
+		{
+			title: "Bauer test",
+			input: GfpolyDiff{
+				F: []string{
+					"7FIGk1PuvaWk0ygVBEuHug==",
+					"q9cA/yePHPE+7U3NV4PkSw==",
+					"4WbK8NLYxMCRyN2N2pjK1Q==",
+					"o5ytKKRZWqYwXF1bKhAzyw==",
+					"UJCxwOzGqyX5xmqquXN7bQ==",
+					"hdEtCsL9zPiSEVUR2fm22A==",
+					"KzvdkWUK7TzZ1bCK/bBwjg==",
+					"P6ef12fMvBzsF1VaRn5jrw==",
+				},
+			},
+			expected: GfpolyDiffExpected{
+				FStrich: []string{
+					"q9cA/yePHPE+7U3NV4PkSw==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+					"o5ytKKRZWqYwXF1bKhAzyw==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+					"hdEtCsL9zPiSEVUR2fm22A==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+					"P6ef12fMvBzsF1VaRn5jrw==",
+				},
+			},
+		},
 	}
 
 	for _, testcase := range testcases {

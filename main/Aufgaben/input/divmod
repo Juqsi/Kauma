@@ -1,0 +1,68 @@
+{
+    "testcases": {
+        "gfpoly_divmod-009": {
+            "action": "gfpoly_divmod",
+            "arguments": {
+                "A": [
+                    "NeverGonnaGiveYouUpAAA=="
+                ],
+                "B": [
+                    "AAAAAAAAAAAAAAAAAAAAAA==",
+                    "AAAAAAAAAAAAAAAAAAAAAA==",
+                    "NeverGonnaLetYouDownAA=="
+                ]
+            }
+        },
+        "gfpoly_divmod-015": {
+            "action": "gfpoly_divmod",
+            "arguments": {
+                "A": [
+                    "NeverGonnaLetYouDownAA=="
+                ],
+                "B": [
+                    "AAAAAAAAAAAAAAAAAAAAAA==",
+                    "AAAAAAAAAAAAAAAAAAAAAA==",
+                    "NeverGonnaLetYouDownAA=="
+                ]
+            }
+        },
+        "gfpoly_divmod_forum": {
+            "action": "gfpoly_divmod",
+            "arguments": {
+                "A": [
+                    "NeverGonnaGiveYouUpAAA=="
+                ],
+                "B": [
+                    "NeverGonnaGiveYouUpAAA==",
+                    "NeverGonnaLetYouDownAA=="
+                ]
+            }
+        },
+        "gfpoly_divmod-033": {
+            "action": "gfpoly_divmod",
+            "arguments": {
+                "A": [
+                    "gAAAAAAAAAAAAAAAAAAAAA=="
+                ],
+                "B": [
+                    "AAAAAAAAAAAAAAAAAAAAAA==",
+                    "AAAAAAAAAAAAAAAAAAAAAA==",
+                    "NeverGonnaLetYouDownAA=="
+                ]
+            }
+        },
+        "gfpoly_divmod-027": {
+            "action": "gfpoly_divmod",
+            "arguments": {
+                "A": [
+                    "AAAAAAAAAAAAAAAAAAAAAA=="
+                ],
+                "B": [
+                    "AAAAAAAAAAAAAAAAAAAAAA==",
+                    "AAAAAAAAAAAAAAAAAAAAAA==",
+                    "NeverGonnaLetYouDownAA=="
+                ]
+            }
+        }
+    }
+}

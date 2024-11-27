@@ -1,0 +1,52 @@
+{
+    "testcases": {
+        "416f136f-c91b-4ece-b663-f44a1ab7f07b": {
+            "action": "gfmul",
+            "arguments": {
+                "semantic": "xex",
+                "a": "ARIAAAAAAAAAAAAAAAAAgA==",
+                "b": "AgAAAAAAAAAAAAAAAAAAAA=="
+            }
+        },
+        "416f136f-c91b-4ece-b663-f44a1ab7f07c": {
+            "action": "gfmul",
+            "arguments": {
+                "semantic": "xex",
+                "b": "ARIAAAAAAAAAAAAAAAAAgA==",
+                "a": "AgAAAAAAAAAAAAAAAAAAAA=="
+            }
+        },
+        "416f136f-c91b-4ece-b663-f44a1ab7f07d": {
+            "action": "gfmul",
+            "arguments": {
+                "semantic": "xex",
+                "b": "AAEAAAAAAAAAAAAAAAAAAA==",
+                "a": "AgAAAAAAAAAAAAAAAAAAAA=="
+            }
+        },
+        "416f136f-c91b-4ece-b663-f44a1ab7f07e": {
+            "action": "gfmul",
+            "arguments": {
+                "semantic": "xex",
+                "a": "AAEAAAAAAAAAAAAAAAAAAA==",
+                "b": "AgAAAAAAAAAAAAAAAAAAAA=="
+            }
+        },
+        "gcm_mul": {
+            "action": "gfmul",
+            "arguments": {
+                "semantic": "gcm",
+                "a": "AAEAAAAAAAAAAAAAAAAAAA==",
+                "b": "AgAAAAAAAAAAAAAAAAAAAA=="
+            }
+        },
+        "gcm_mul2": {
+            "action": "gfmul",
+            "arguments": {
+                "semantic": "gcm",
+                "a": "QUQtRGF0ZW4AAAAAAAAAAA==",
+                "b": "xhFcAUT66qWIpYz+Ch5ujw=="
+            }
+        }
+    }
+}

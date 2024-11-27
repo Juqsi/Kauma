@@ -1,0 +1,30 @@
+{
+    "testcases": {
+        "bauer": {
+            "action": "gfpoly_diff",
+            "arguments": {
+                "F": [
+                    "7FIGk1PuvaWk0ygVBEuHug==",
+                    "q9cA/yePHPE+7U3NV4PkSw==",
+                    "4WbK8NLYxMCRyN2N2pjK1Q==",
+                    "o5ytKKRZWqYwXF1bKhAzyw==",
+                    "UJCxwOzGqyX5xmqquXN7bQ==",
+                    "hdEtCsL9zPiSEVUR2fm22A==",
+                    "KzvdkWUK7TzZ1bCK/bBwjg==",
+                    "P6ef12fMvBzsF1VaRn5jrw=="
+                ]
+            }
+        },
+        "blatt": {
+            "action": "gfpoly_diff",
+            "arguments": {
+                "F": [
+                    "IJustWannaTellYouAAAAA==",
+                    "HowImFeelingAAAAAAAAAA==",
+                    "GottaMakeYouAAAAAAAAAA==",
+                    "UnderstaaaaaaaaaaaaanQ=="
+                ]
+            }
+        }
+    }
+}

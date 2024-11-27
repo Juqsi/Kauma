@@ -1,7 +1,7 @@
 package gfpoly
 
 type GfpolyDiff struct {
-	F       []string `json:"Q"`
+	F       []string `json:"F"`
 	FStrich []string `json:"F'"`
 }
 
