@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"runtime/debug"
+	"sync"
 )
 
 func runTestcases(testCases models.TestcaseFile) string {
@@ -37,8 +38,16 @@ func runTestcases(testCases models.TestcaseFile) string {
 		"gfpoly_factor_ddf": handleGfpolyDdf,
 	}
 
+	var wg sync.WaitGroup
+	sem := make(chan struct{}, 4)
+
 	for key, testCase := range testCases.Testcases {
-		func(key string, testCase models.Testcase) {
+		wg.Add(1)
+		go func(key string, testCase models.Testcase) {
+			defer wg.Done()
+			sem <- struct{}{}
+			defer func() { <-sem }()
+
 			defer func() {
 				if r := recover(); r != nil {
 					errorOccured = true
@@ -60,6 +69,7 @@ func runTestcases(testCases models.TestcaseFile) string {
 			}
 		}(key, testCase)
 	}
+	wg.Wait()
 
 	res := struct {
 		Response map[string]map[string]interface{} `json:"responses"`

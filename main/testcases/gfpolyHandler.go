@@ -101,7 +101,7 @@ func handleGfpolySff(argsData []byte) (map[string]interface{}, error) {
 }
 
 func handleGfpolyDdf(argsData []byte) (map[string]interface{}, error) {
-	args := new(gfpoly.GfpolySff)
+	args := new(gfpoly.GfpolyDdf)
 	if err := json.Unmarshal(argsData, &args); err != nil {
 		return nil, err
 	}
