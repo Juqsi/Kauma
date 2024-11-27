@@ -33,6 +33,7 @@ func runTestcases(testCases models.TestcaseFile) (string, bool) {
 		"gfpoly_sqrt":       handleGfpolySqrt,
 		"gfpoly_diff":       handleGfpolyDiff,
 		"gfpoly_gcd":        handleGfpolyGgt,
+		"gfpoly_factor_sff": handleGfpolySff,
 	}
 
 	for key, testCase := range testCases.Testcases {

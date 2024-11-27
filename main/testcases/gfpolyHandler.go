@@ -90,3 +90,12 @@ func handleGfpolyGgt(argsData []byte) (map[string]interface{}, error) {
 	args.Execute()
 	return map[string]interface{}{"G": args.G}, nil
 }
+
+func handleGfpolySff(argsData []byte) (map[string]interface{}, error) {
+	args := new(gfpoly.GfpolySff)
+	if err := json.Unmarshal(argsData, &args); err != nil {
+		return nil, err
+	}
+	args.Execute()
+	return map[string]interface{}{"factors": args.Factors}, nil
+}

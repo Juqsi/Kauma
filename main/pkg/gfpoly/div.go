@@ -21,9 +21,13 @@ func (g *GfpolyDiv) Execute() {
 	g.R = polyR.Base64()
 }
 
-func (p *Poly) Div(dividend, divisor *Poly) (quotient, remainder *Poly) {
+func (p *Poly) Div(dividendA, divisorA *Poly) (quotient, remainder *Poly) {
+	dividend := dividendA.DeepCopy()
+	divisor := divisorA.DeepCopy()
+
 	divisor.CutLeadingZeroFaktors()
 	dividend.CutLeadingZeroFaktors()
+
 	lenDivisor := len(*divisor)
 	if len(*dividend) < len(*divisor) {
 		return &Poly{utils.NewLongFromBigInt(*big.NewInt(0)).Int}, dividend

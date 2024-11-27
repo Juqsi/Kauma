@@ -7,8 +7,8 @@ import (
 )
 
 type GfpolySff struct {
-	F       []string     `json:"F"`
-	Factors FactorsModel `json:"factors"`
+	F       []string `json:"F"`
+	Factors FactorsModel
 }
 type Factor struct {
 	Factor   Poly
@@ -41,18 +41,18 @@ func (g *GfpolySff) Execute() {
 func (f *Poly) sff() Factors {
 	one := Poly{utils.NewLongFromBigInt(*big.NewInt(1)).Int}
 	c := new(Poly).Gcd(f, new(Poly).Diff(f))
-	f.Div(f, c)
+	f, _ = f.Div(f, c)
 	z := new(Factors)
 	e := 1
 
 	for f.Cmp(f, &one) != 0 {
 		y := new(Poly).Gcd(f, c)
 		if f.Cmp(f, y) != 0 {
-			_, t := f.Div(f, y)
+			t, _ := f.Div(f, y)
 			*z = append(*z, Factor{*t, e})
 		}
 		*f = *y
-		_, c = c.Div(c, y)
+		c, _ = c.Div(c, y)
 		e++
 	}
 
