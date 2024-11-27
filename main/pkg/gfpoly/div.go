@@ -21,7 +21,7 @@ func (g *GfpolyDiv) Execute() {
 	g.R = polyR.Base64()
 }
 
-func (p *Poly) Div(dividendA, divisorA *Poly) (quotient, remainder *Poly) {
+func (_ *Poly) Div(dividendA, divisorA *Poly) (quotient, remainder *Poly) {
 	dividend := dividendA.DeepCopy()
 	divisor := divisorA.DeepCopy()
 
@@ -48,4 +48,10 @@ func (p *Poly) Div(dividendA, divisorA *Poly) (quotient, remainder *Poly) {
 		}
 	}
 	return quotient.CutLeadingZeroFaktors(), dividend.CutLeadingZeroFaktors()
+}
+
+func (p *Poly) Mod(a, m *Poly) *Poly {
+	_, r := new(Poly).Div(a, m)
+	*p = *r
+	return p
 }

@@ -112,11 +112,11 @@ func (p *PaddingOracle) executeByteIndex(conn net.Conn, plaintextBlock, qBlocks 
 			panic(fmt.Sprintf("Error: %v", err))
 		}
 		if len(response) == 0 {
-			_, _ = fmt.Fprintf(os.Stderr, "startI %v \n", startI)
-			_, _ = fmt.Fprintf(os.Stderr, "endI %v \n", endI)
-			_, _ = fmt.Fprintf(os.Stderr, "ByteIndex %v \n", byteIndex)
-			_, _ = fmt.Fprintf(os.Stderr, "QBlocks %v \n", qBlocks)
-			_, _ = fmt.Fprintf(os.Stderr, "PlaintextBlock %v \n", plaintextBlock)
+			_, _ = fmt.Fprintf(os.Stderr, "1startI %v \n", startI)
+			_, _ = fmt.Fprintf(os.Stderr, "1endI %v \n", endI)
+			_, _ = fmt.Fprintf(os.Stderr, "1ByteIndex %v \n", byteIndex)
+			_, _ = fmt.Fprintf(os.Stderr, "1QBlocks %v \n", qBlocks)
+			_, _ = fmt.Fprintf(os.Stderr, "1PlaintextBlock %v \n", plaintextBlock)
 		}
 		//multiple true responses
 		if len(response) == 2 {
@@ -125,6 +125,13 @@ func (p *PaddingOracle) executeByteIndex(conn net.Conn, plaintextBlock, qBlocks 
 			err = sendMessage(conn, newLengthField)
 			if err != nil {
 				panic(fmt.Sprintf("multiple true check: Error sending qBlock ByteIndex: %d, i: %v:\n %v", byteIndex, response, err))
+			}
+			if len(response) == 0 {
+				_, _ = fmt.Fprintf(os.Stderr, "2startI %v \n", startI)
+				_, _ = fmt.Fprintf(os.Stderr, "2endI %v \n", endI)
+				_, _ = fmt.Fprintf(os.Stderr, "2ByteIndex %v \n", byteIndex)
+				_, _ = fmt.Fprintf(os.Stderr, "2QBlocks %v \n", qBlocks)
+				_, _ = fmt.Fprintf(os.Stderr, "2PlaintextBlock %v \n", plaintextBlock)
 			}
 			for _, q := range response {
 				qBlocks[PADDING_ORACLE_BLOCKSIZE-byteIndex-1] = byte(q ^ 0xff)
@@ -137,6 +144,13 @@ func (p *PaddingOracle) executeByteIndex(conn net.Conn, plaintextBlock, qBlocks 
 			NewResponse, err := receiveMessage(conn, len(response))
 			if err != nil {
 				panic(fmt.Sprintf("Error: %v", err))
+			}
+			if len(response) == 0 {
+				_, _ = fmt.Fprintf(os.Stderr, "3startI %v \n", startI)
+				_, _ = fmt.Fprintf(os.Stderr, "3endI %v \n", endI)
+				_, _ = fmt.Fprintf(os.Stderr, "3ByteIndex %v \n", byteIndex)
+				_, _ = fmt.Fprintf(os.Stderr, "3QBlocks %v \n", qBlocks)
+				_, _ = fmt.Fprintf(os.Stderr, "3PlaintextBlock %v \n", plaintextBlock)
 			}
 
 			response[0] = response[NewResponse[0]]

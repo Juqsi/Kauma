@@ -17,7 +17,7 @@ func (g *GfpolyMul) Execute() {
 	g.P = polyA.Base64()
 }
 
-func (p *Poly) Mul(a, b *Poly) Poly {
+func (p *Poly) Mul(a, b *Poly) *Poly {
 	result := make(Poly, len(*a)+len(*b)-1)
 	for indexA, factorA := range *a {
 		for indexB, factorB := range *b {
@@ -26,5 +26,5 @@ func (p *Poly) Mul(a, b *Poly) Poly {
 		}
 	}
 	*p = *result.CutLeadingZeroFaktors()
-	return *p
+	return p
 }

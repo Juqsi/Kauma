@@ -8,7 +8,7 @@ import (
 	"runtime/debug"
 )
 
-func runTestcases(testCases models.TestcaseFile) (string, bool) {
+func runTestcases(testCases models.TestcaseFile) string {
 	result := make(map[string]map[string]interface{})
 	handlerCounts := make(map[string]int)
 	errorOccured := false
@@ -34,6 +34,7 @@ func runTestcases(testCases models.TestcaseFile) (string, bool) {
 		"gfpoly_diff":       handleGfpolyDiff,
 		"gfpoly_gcd":        handleGfpolyGgt,
 		"gfpoly_factor_sff": handleGfpolySff,
+		"gfpoly_factor_ddf": handleGfpolyDdf,
 	}
 
 	for key, testCase := range testCases.Testcases {
@@ -71,5 +72,5 @@ func runTestcases(testCases models.TestcaseFile) (string, bool) {
 		_, _ = fmt.Fprintf(os.Stderr, "Statistik: \n %s", stats)
 	}
 
-	return string(a), errorOccured
+	return string(a)
 }

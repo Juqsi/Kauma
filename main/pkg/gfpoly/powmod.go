@@ -8,7 +8,7 @@ import (
 type GfpolyPowmod struct {
 	A []string `json:"A"`
 	M []string `json:"M"`
-	K int      `json:"K"`
+	K big.Int  `json:"K"`
 	Z []string `json:"p"`
 }
 
@@ -19,23 +19,25 @@ func (g *GfpolyPowmod) Execute() {
 	g.Z = polyA.Base64()
 }
 
-func (p *Poly) Powmod(a, m *Poly, k int) *Poly {
+func (p *Poly) Powmod(base *Poly, m *Poly, k big.Int) *Poly {
 	var result = new(Poly)
-	if k == 0 {
+	base = base.DeepCopy()
+
+	if k.Sign() == 0 {
 		result = &Poly{utils.NewLongFromBigInt(*big.NewInt(1)).Int}
 		*p = *result
 		return result
 	}
 	*result = make(Poly, len(*m))
 	(*result)[0] = utils.NewLongFromBigInt(*big.NewInt(1)).Int
-	for k > 0 {
-		if k&1 == 1 {
-			result.Mul(result, a)
+	for k.Sign() != 0 {
+		if k.Bit(0)&1 == 1 {
+			result.Mul(result, base)
 			_, result = new(Poly).Div(result, m)
 		}
-		a.Mul(a, a)
-		_, a = new(Poly).Div(a, m)
-		k >>= 1
+		base.Mul(base, base)
+		_, base = new(Poly).Div(base, m)
+		k.Rsh(&k, 1)
 	}
 	*p = *result.CutLeadingZeroFaktors()
 	return p

@@ -48,6 +48,10 @@ func (p *Poly) IsZero() bool {
 	return p.Degree() == -1
 }
 
+func (p *Poly) IsOne() bool {
+	return p.Degree() == 0 && (*p)[0].Cmp(big.NewInt(1)) == 0
+}
+
 // Cmp compares x and y and returns:
 //   - -1 if x < y;
 //   - 0 if x == y;

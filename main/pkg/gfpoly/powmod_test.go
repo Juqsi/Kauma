@@ -2,6 +2,7 @@ package gfpoly
 
 import (
 	"github.com/stretchr/testify/assert"
+	"math/big"
 	"testing"
 )
 
@@ -27,7 +28,7 @@ func TestGfpolyPowmod_Execute(t *testing.T) {
 					"KryptoanalyseAAAAAAAAA==",
 					"DHBWMannheimAAAAAAAAAA==",
 				},
-				K: 1000,
+				K: *big.NewInt(1000),
 			},
 			expected: GfpolyPowmodExpected{
 				Z: []string{

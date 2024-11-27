@@ -24,10 +24,8 @@ func (p *Poly) Sqrt(q *Poly, m big.Int) *Poly {
 	// sqrt of q -> 2^128-1
 	exp := new(big.Int).Lsh(big.NewInt(1), uint(m.BitLen()-2))
 	sqrt := make(Poly, (len(*q)+1)/2)
-	for i, t := range *q {
-		if i&1 == 0 {
-			sqrt[i/2] = actions.Pow(&t, exp)
-		}
+	for i := 0; i < len(*q); i += 2 {
+		sqrt[i/2] = actions.Pow(&(*q)[i], exp)
 	}
 	*p = *sqrt.CutLeadingZeroFaktors()
 	return p
