@@ -51,7 +51,6 @@ func GfInverseBigInt(b, reduce big.Int) big.Int {
 			g1.Xor(&g1, tempG2) // g1 = g1 - g2 * x^shift (XOR)
 		}
 
-		// Tausche u <-> v und g1 <-> g2
 		u, v = v, u
 		g1, g2 = g2, g1
 	}

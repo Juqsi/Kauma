@@ -149,7 +149,6 @@ func (p *PaddingOracle) handleMultipleTrue(conn net.Conn, byteIndex int, qBlocks
 	}
 	for _, q := range response {
 		q += uint(startI)
-		fmt.Println("q", q)
 		qBlocks[PADDING_ORACLE_BLOCKSIZE-byteIndex-1] = byte(q ^ 0xff)
 		qBlocks[PADDING_ORACLE_BLOCKSIZE-byteIndex] = byte(q)
 		err = sendMessage(conn, qBlocks)
