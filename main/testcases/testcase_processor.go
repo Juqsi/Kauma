@@ -5,14 +5,19 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"runtime"
 	"runtime/debug"
+	"sync"
 )
 
 func runTestcases(testCases models.TestcaseFile) string {
 	result := make(map[string]map[string]interface{})
 	handlerCounts := make(map[string]int)
 	errorOccured := false
+	var mu sync.Mutex
+	var wg sync.WaitGroup
 
+	// Handler-Funktionen
 	handlers := map[string]func([]byte) (map[string]interface{}, error){
 		"poly2block":        handlePoly2Block,
 		"block2poly":        handleBlock2Poly,
@@ -37,30 +42,62 @@ func runTestcases(testCases models.TestcaseFile) string {
 		"gfpoly_factor_ddf": handleGfpolyDdf,
 	}
 
-	for key, testCase := range testCases.Testcases {
-		func(key string, testCase models.Testcase) {
+	type Job struct {
+		Key      string
+		TestCase models.Testcase
+	}
+
+	jobQueue := make(chan Job, len(testCases.Testcases))
+
+	numCPUs := runtime.NumCPU()
+	numWorkers := numCPUs
+
+	worker := func() {
+		defer wg.Done()
+		for job := range jobQueue {
+			key := job.Key
+			testCase := job.TestCase
 
 			defer func() {
 				if r := recover(); r != nil {
+					mu.Lock()
 					errorOccured = true
 					_, _ = fmt.Fprintf(os.Stderr, "Error in testcase \n action: %s \n Arguments: %s: %v\n", testCase.Action, testCase.Arguments, r)
 					_, _ = fmt.Fprintf(os.Stderr, "Stacktrace:\n%s\n", debug.Stack())
 					handlerCounts[testCase.Action+"-recovered"]++
+					mu.Unlock()
 				}
 			}()
 
 			if handler, found := handlers[testCase.Action]; found {
+				mu.Lock()
 				handlerCounts[testCase.Action]++
+				mu.Unlock()
+
 				if res, err := handler(testCase.Arguments); err == nil {
+					mu.Lock()
 					result[key] = res
+					mu.Unlock()
 				} else {
 					_, _ = fmt.Fprintf(os.Stderr, "(Marshal-) Error in testcase %s: %v\n", key, err)
 				}
 			} else {
 				_, _ = fmt.Fprintf(os.Stderr, "Unknown action: %s\n", testCase.Action)
 			}
-		}(key, testCase)
+		}
 	}
+
+	wg.Add(numWorkers)
+	for i := 0; i < numWorkers; i++ {
+		go worker()
+	}
+
+	for key, testCase := range testCases.Testcases {
+		jobQueue <- Job{Key: key, TestCase: testCase}
+	}
+	close(jobQueue)
+
+	wg.Wait()
 
 	res := struct {
 		Response map[string]map[string]interface{} `json:"responses"`

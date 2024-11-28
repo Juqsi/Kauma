@@ -21,7 +21,6 @@ func (p *Poly) GfSqrt128(q *Poly) *Poly {
 }
 
 func (p *Poly) Sqrt(q *Poly, m big.Int) *Poly {
-	// sqrt of q -> 2^128-1
 	exp := new(big.Int).Lsh(big.NewInt(1), uint(m.BitLen()-2))
 	sqrt := make(Poly, (len(*q)+1)/2)
 	for i := 0; i < len(*q); i += 2 {
