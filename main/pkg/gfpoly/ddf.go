@@ -19,19 +19,25 @@ func (g *GfpolyDdf) Execute() {
 func (p *Poly) Ddf() Factors {
 	q := big.NewInt(1)
 	q.Lsh(q, 128)
+
+	X := NewPolyFromBase64([]string{"AAAAAAAAAAAAAAAAAAAAAA==", "gAAAAAAAAAAAAAAAAAAAAA=="})
+	exp := big.NewInt(1)
+
 	z := Factors{}
 	d := 1
 	fStar := p.DeepCopy()
+	degree := fStar.Degree()
 
-	for fStar.Degree() >= 2*d {
-		X := NewPolyFromBase64([]string{"AAAAAAAAAAAAAAAAAAAAAA==", "gAAAAAAAAAAAAAAAAAAAAA=="})
-		exp := new(big.Int).Exp(q, big.NewInt(int64(d)), nil)
+	for degree >= 2*d {
+		exp.Mul(exp, q)
 		h := new(Poly).PowMod(X, exp, fStar)
 		h.Add(h, X)
 		g := new(Poly).Gcd(h, fStar)
+
 		if !g.IsOne() {
 			z = append(z, Factor{*g, d})
 			fStar, _ = fStar.Div(fStar, g)
+			degree = fStar.Degree()
 		}
 		d++
 	}

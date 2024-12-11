@@ -22,7 +22,7 @@ func (g *GfpolyPowMod) Execute() {
 func (p *Poly) PowMod(base *Poly, k *big.Int, m *Poly) *Poly {
 	result := &Poly{actions.OneBlock}
 
-	workingK := k
+	workingK := new(big.Int).Set(k)
 	workingBase := base.DeepCopy()
 
 	for workingK.Sign() != 0 {
