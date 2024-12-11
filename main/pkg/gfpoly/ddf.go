@@ -26,7 +26,7 @@ func (p *Poly) Ddf() Factors {
 	for fStar.Degree() >= 2*d {
 		X := NewPolyFromBase64([]string{"AAAAAAAAAAAAAAAAAAAAAA==", "gAAAAAAAAAAAAAAAAAAAAA=="})
 		exp := new(big.Int).Exp(q, big.NewInt(int64(d)), nil)
-		h := new(Poly).PowMod(X, *exp, fStar)
+		h := new(Poly).PowMod(X, exp, fStar)
 		h.Add(h, X)
 		g := new(Poly).Gcd(h, fStar)
 		if !g.IsOne() {

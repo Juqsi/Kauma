@@ -15,17 +15,18 @@ type GfpolyPowMod struct {
 func (g *GfpolyPowMod) Execute() {
 	polyA := NewPolyFromBase64(g.A)
 	polyM := NewPolyFromBase64(g.M)
-	polyA.PowMod(polyA, g.K, polyM)
+	polyA.PowMod(polyA, &g.K, polyM)
 	g.Z = polyA.Base64()
 }
 
-func (p *Poly) PowMod(base *Poly, k big.Int, m *Poly) *Poly {
+func (p *Poly) PowMod(base *Poly, k *big.Int, m *Poly) *Poly {
 	result := &Poly{actions.OneBlock}
 
+	workingK := k
 	workingBase := base.DeepCopy()
 
-	for k.Sign() != 0 {
-		if k.Bit(0) == 1 {
+	for workingK.Sign() != 0 {
+		if workingK.Bit(0) == 1 {
 			result.Mul(result, workingBase)
 			result.Mod(result, m)
 		}
@@ -33,7 +34,7 @@ func (p *Poly) PowMod(base *Poly, k big.Int, m *Poly) *Poly {
 		workingBase.Mul(workingBase, workingBase)
 		workingBase.Mod(workingBase, m)
 
-		k.Rsh(&k, 1)
+		workingK.Rsh(workingK, 1)
 	}
 	*p = *result.CutLeadingZeroFaktors()
 	return p

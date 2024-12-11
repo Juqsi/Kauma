@@ -18,7 +18,6 @@ func (g *GfpolyEdf) Execute() {
 
 }
 
-// TODO hier nur int?? oder big.Int
 func (p *Polys) Edf(f *Poly, d int) Polys {
 	q := big.NewInt(1)
 	q.Lsh(q, 128)
@@ -33,7 +32,7 @@ func (p *Polys) Edf(f *Poly, d int) Polys {
 	for len(z) < n {
 		h := RandomPolynomial(f.Degree() - 1)
 
-		g := new(Poly).PowMod(h, *exp, f)
+		g := new(Poly).PowMod(h, exp, f)
 		g.Add(g, &Poly{actions.OneBlock})
 
 		for i := len(z) - 1; i >= 0; i-- {
