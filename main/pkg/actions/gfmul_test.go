@@ -36,6 +36,11 @@ func TestGfmul_Execute(t *testing.T) {
 			input:    Gfmul{Factor2: "QAAAAAAAAAAAAAAAAAAAAA==", Factor1: "wgAAAAAAAAAAAAAAAAAAAQ==", Semantic: "gcm"},
 			expected: "gAAAAAAAAAAAAAAAAAAAAA==",
 		},
+		{
+			title:    "Lukas Debug",
+			input:    Gfmul{Factor2: "wAAAAAAAAAAAAAAAAAAAAA==", Factor1: "wAAAAAAAAAAAAAAAAAAAAA==", Semantic: "gcm"},
+			expected: "oAAAAAAAAAAAAAAAAAAAAA==",
+		},
 	}
 
 	for _, testcase := range testcases {

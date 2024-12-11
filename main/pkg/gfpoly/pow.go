@@ -1,8 +1,7 @@
 package gfpoly
 
 import (
-	"Abgabe/main/pkg/utils"
-	"math/big"
+	"Abgabe/main/pkg/actions"
 )
 
 type GfpolyPow struct {
@@ -18,14 +17,9 @@ func (g *GfpolyPow) Execute() {
 }
 
 func (p *Poly) Pow(a *Poly, n int) *Poly {
-	var result *Poly
-	if n == 0 {
-		result = &Poly{utils.NewLongFromBigInt(*big.NewInt(1)).Int}
-		*p = *result
-		return result
-	}
-	result = &Poly{utils.NewLongFromBigInt(*big.NewInt(1)).Int}
+	result := &Poly{actions.OneBlock}
 	for n > 0 {
+
 		if n&1 == 1 {
 			result.Mul(result, a)
 		}

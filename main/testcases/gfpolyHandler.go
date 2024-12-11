@@ -39,8 +39,8 @@ func handleGfpolyDiv(argsData []byte) (map[string]interface{}, error) {
 	args.Execute()
 	return map[string]interface{}{"Q": args.Q, "R": args.R}, nil
 }
-func handleGfpolyPowmod(argsData []byte) (map[string]interface{}, error) {
-	args := new(gfpoly.GfpolyPowmod)
+func handleGfpolyPowMod(argsData []byte) (map[string]interface{}, error) {
+	args := new(gfpoly.GfpolyPowMod)
 	if err := json.Unmarshal(argsData, &args); err != nil {
 		return nil, err
 	}
@@ -102,6 +102,15 @@ func handleGfpolySff(argsData []byte) (map[string]interface{}, error) {
 
 func handleGfpolyDdf(argsData []byte) (map[string]interface{}, error) {
 	args := new(gfpoly.GfpolyDdf)
+	if err := json.Unmarshal(argsData, &args); err != nil {
+		return nil, err
+	}
+	args.Execute()
+	return map[string]interface{}{"factors": args.Factors}, nil
+}
+
+func handleGfpolyEdf(argsData []byte) (map[string]interface{}, error) {
+	args := new(gfpoly.GfpolyEdf)
 	if err := json.Unmarshal(argsData, &args); err != nil {
 		return nil, err
 	}

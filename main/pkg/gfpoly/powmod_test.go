@@ -6,19 +6,19 @@ import (
 	"testing"
 )
 
-type GfpolyPowmodExpected struct {
+type GfpolyPowModExpected struct {
 	Z []string `json:"Z"`
 }
 
-func TestGfpolyPowmod_Execute(t *testing.T) {
+func TestGfpolyPowMod_Execute(t *testing.T) {
 	testcases := []struct {
 		title    string
-		input    GfpolyPowmod
-		expected GfpolyPowmodExpected
+		input    GfpolyPowMod
+		expected GfpolyPowModExpected
 	}{
 		{
 			title: "Basic Test Encode aes",
-			input: GfpolyPowmod{
+			input: GfpolyPowMod{
 				A: []string{
 					"JAAAAAAAAAAAAAAAAAAAAA==",
 					"wAAAAAAAAAAAAAAAAAAAAA==",
@@ -30,7 +30,7 @@ func TestGfpolyPowmod_Execute(t *testing.T) {
 				},
 				K: *big.NewInt(1000),
 			},
-			expected: GfpolyPowmodExpected{
+			expected: GfpolyPowModExpected{
 				Z: []string{
 					"oNXl5P8xq2WpUTP92u25zg==",
 				},

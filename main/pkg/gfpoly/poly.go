@@ -1,6 +1,7 @@
 package gfpoly
 
 import (
+	"Abgabe/main/pkg/actions"
 	"Abgabe/main/pkg/utils"
 	"math/big"
 )
@@ -56,7 +57,7 @@ func (p *Poly) IsOne() bool {
 //   - -1 if x < y;
 //   - 0 if x == y;
 //   - +1 if x > y.
-func (p *Poly) Cmp(x, y *Poly) int {
+func (x *Poly) Cmp(y *Poly) int {
 	xDegree := x.Degree()
 	yDegree := y.Degree()
 	if xDegree != yDegree {
@@ -88,4 +89,41 @@ func (p *Poly) DeepCopy() *Poly {
 		copy[i] = *big.NewInt(0).Set(&v)
 	}
 	return &copy
+}
+
+func RandomPolynomial(maxDegree int) *Poly {
+	if maxDegree <= 0 {
+		panic("maxDegree must be greater than 0")
+		return &Poly{actions.OneBlock}
+	}
+
+	var polyCoeffs Poly
+	for i := 0; i < maxDegree; i++ {
+		coeff := randBigInt128()
+		polyCoeffs = append(polyCoeffs, *coeff)
+	}
+
+	for len(polyCoeffs) > 0 && polyCoeffs[len(polyCoeffs)-1].Cmp(&actions.OneBlock) == 0 {
+		polyCoeffs = polyCoeffs[:len(polyCoeffs)-1]
+	}
+
+	if len(polyCoeffs) == 0 {
+		return &Poly{actions.OneBlock}
+	}
+
+	return &polyCoeffs
+}
+func randBigInt128() *big.Int {
+	max := big.NewInt(1)
+	max.Lsh(max, 128)
+	max.Sub(max, big.NewInt(1))
+
+	randInt := new(big.Int).Rand(actions.RandGen, max)
+
+	// Ensure the random number is not zero
+	if randInt.Sign() == 0 {
+		randInt.Add(randInt, big.NewInt(1))
+	}
+
+	return randInt
 }

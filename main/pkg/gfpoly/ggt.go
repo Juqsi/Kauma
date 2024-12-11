@@ -22,7 +22,7 @@ func (p *Poly) Gcd(a, b *Poly) *Poly {
 		*p = *a
 		return p
 	}
-	if a.Cmp(a, b) == -1 {
+	if a.Cmp(b) == -1 {
 		return p.Gcd(b, a)
 	}
 	_, remainder := a.Div(a, b)

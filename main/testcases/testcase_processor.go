@@ -32,7 +32,7 @@ func runTestcases(testCases models.TestcaseFile) string {
 		"gfpoly_pow":        handleGfpolyPow,
 		"gfdiv":             handleGfdiv,
 		"gfpoly_divmod":     handleGfpolyDiv,
-		"gfpoly_powmod":     handleGfpolyPowmod,
+		"gfpoly_powmod":     handleGfpolyPowMod,
 		"gfpoly_sort":       handleGfpolySort,
 		"gfpoly_make_monic": handleGfpolyMakeMonic,
 		"gfpoly_sqrt":       handleGfpolySqrt,
@@ -40,6 +40,7 @@ func runTestcases(testCases models.TestcaseFile) string {
 		"gfpoly_gcd":        handleGfpolyGgt,
 		"gfpoly_factor_sff": handleGfpolySff,
 		"gfpoly_factor_ddf": handleGfpolyDdf,
+		"gfpoly_factor_edf": handleGfpolyEdf,
 	}
 
 	type Job struct {

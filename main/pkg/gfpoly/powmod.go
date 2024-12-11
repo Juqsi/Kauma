@@ -1,42 +1,38 @@
 package gfpoly
 
 import (
-	"Abgabe/main/pkg/utils"
+	"Abgabe/main/pkg/actions"
 	"math/big"
 )
 
-type GfpolyPowmod struct {
+type GfpolyPowMod struct {
 	A []string `json:"A"`
 	M []string `json:"M"`
 	K big.Int  `json:"K"`
 	Z []string `json:"p"`
 }
 
-func (g *GfpolyPowmod) Execute() {
+func (g *GfpolyPowMod) Execute() {
 	polyA := NewPolyFromBase64(g.A)
 	polyM := NewPolyFromBase64(g.M)
-	polyA.Powmod(polyA, polyM, g.K)
+	polyA.PowMod(polyA, g.K, polyM)
 	g.Z = polyA.Base64()
 }
 
-func (p *Poly) Powmod(base *Poly, m *Poly, k big.Int) *Poly {
-	var result = new(Poly)
-	base = base.DeepCopy()
+func (p *Poly) PowMod(base *Poly, k big.Int, m *Poly) *Poly {
+	result := &Poly{actions.OneBlock}
 
-	if k.Sign() == 0 {
-		result = &Poly{utils.NewLongFromBigInt(*big.NewInt(1)).Int}
-		*p = *result
-		return result
-	}
-	*result = make(Poly, len(*m))
-	(*result)[0] = utils.NewLongFromBigInt(*big.NewInt(1)).Int
+	workingBase := base.DeepCopy()
+
 	for k.Sign() != 0 {
-		if k.Bit(0)&1 == 1 {
-			result.Mul(result, base)
-			_, result = new(Poly).Div(result, m)
+		if k.Bit(0) == 1 {
+			result.Mul(result, workingBase)
+			result.Mod(result, m)
 		}
-		base.Mul(base, base)
-		_, base = new(Poly).Div(base, m)
+
+		workingBase.Mul(workingBase, workingBase)
+		workingBase.Mod(workingBase, m)
+
 		k.Rsh(&k, 1)
 	}
 	*p = *result.CutLeadingZeroFaktors()

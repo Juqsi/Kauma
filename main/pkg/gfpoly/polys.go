@@ -17,3 +17,13 @@ func (polys *Polys) Base64() [][]string {
 	}
 	return result
 }
+
+func (p *Polys) removePoly(polys *Polys, poly *Poly) *Polys {
+	*p = make(Polys, 0, len(*polys))
+	for _, pol := range *polys {
+		if pol.Cmp(poly) != 0 {
+			*p = append(*p, pol)
+		}
+	}
+	return p
+}

@@ -17,7 +17,7 @@ func (g *GfpolySqrt) Execute() {
 }
 
 func (p *Poly) GfSqrt128(q *Poly) *Poly {
-	return p.Sqrt(q, actions.Coeff2Number([]uint{128, 7, 2, 1, 0}))
+	return p.Sqrt(q, actions.Reduce128)
 }
 
 func (p *Poly) Sqrt(q *Poly, m big.Int) *Poly {

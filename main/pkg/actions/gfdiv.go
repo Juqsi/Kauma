@@ -20,7 +20,7 @@ func (g *Gfdiv) Execute() {
 }
 
 func Gfdiv128(a, b big.Int) big.Int {
-	return GfdivBigInt(a, b, Coeff2Number([]uint{128, 7, 2, 1, 0}))
+	return GfdivBigInt(a, b, Reduce128)
 }
 
 func GfdivBigInt(a, b, reduce big.Int) big.Int {

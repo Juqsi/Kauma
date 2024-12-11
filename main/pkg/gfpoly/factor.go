@@ -6,7 +6,7 @@ import (
 
 func (list *Factors) Sort() *Factors {
 	sort.SliceStable(*list, func(i, j int) bool {
-		return (*list)[i].Factor.Cmp(&(*list)[i].Factor, &(*list)[j].Factor) < 0
+		return (*list)[i].Factor.Cmp(&(*list)[j].Factor) < 0
 	})
 	return list
 }

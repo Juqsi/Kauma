@@ -37,6 +37,29 @@ func TestGfpolyMul_Execute(t *testing.T) {
 				},
 			},
 		},
+		{
+			title: "Lukas debug",
+			input: GfpolyMul{
+				A: []string{
+					"JAAAAAAAAAAAAAAAAAAAAA==",
+					"wAAAAAAAAAAAAAAAAAAAAA==",
+					"ACAAAAAAAAAAAAAAAAAAAA==",
+				},
+				B: []string{
+					"JAAAAAAAAAAAAAAAAAAAAA==",
+					"wAAAAAAAAAAAAAAAAAAAAA==",
+					"ACAAAAAAAAAAAAAAAAAAAA==",
+				},
+			},
+			expected: GfpolyMulExpected{
+				P: []string{
+					"CCAAAAAAAAAAAAAAAAAAAA==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+					"oAAAAAAAAAAAAAAAAAAAAA==",
+					"AAAAAAAAAAAAAAAAAAAAAA==",
+					"AAAIAAAAAAAAAAAAAAAAAA=="},
+			},
+		},
 	}
 
 	for _, testcase := range testcases {
