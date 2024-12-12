@@ -49,7 +49,7 @@ func GfmulBigInt(factor1, factor2, reduce big.Int) big.Int {
 		tmpFactor2.Set(&factor2)
 	}
 
-	for tmpFactor2.Sign() > 0 {
+	for tmpFactor2.Sign() == 1 {
 		if tmpFactor2.Bit(0) == 1 {
 			result.Xor(result, tmpFactor1)
 		}

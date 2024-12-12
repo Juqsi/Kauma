@@ -4,6 +4,7 @@ import (
 	"Abgabe/main/pkg/actions"
 	"Abgabe/main/pkg/utils"
 	"math/big"
+	"math/rand"
 )
 
 type Poly []big.Int
@@ -98,7 +99,7 @@ func RandomPolynomial(maxDegree int) *Poly {
 	}
 
 	var polyCoeffs Poly
-	for i := 0; i < maxDegree; i++ {
+	for i := 0; i < rand.Intn(maxDegree)+1; i++ {
 		coeff := randBigInt128()
 		polyCoeffs = append(polyCoeffs, *coeff)
 	}

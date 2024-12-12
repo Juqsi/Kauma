@@ -1,6 +1,7 @@
 package gfpoly
 
 import (
+	"fmt"
 	"math/big"
 )
 
@@ -11,39 +12,40 @@ type GfpolyDdf struct {
 
 func (g *GfpolyDdf) Execute() {
 	polyA := NewPolyFromBase64(g.F)
+	fmt.Println(polyA.Base64())
 	factors := polyA.Ddf()
+	fmt.Println(polyA.Base64())
 	g.Factors = factors.Sort().Base64Degree()
 
 }
 
 func (p *Poly) Ddf() Factors {
-	q := big.NewInt(1)
-	q.Lsh(q, 128)
-
 	X := NewPolyFromBase64([]string{"AAAAAAAAAAAAAAAAAAAAAA==", "gAAAAAAAAAAAAAAAAAAAAA=="})
 	exp := big.NewInt(1)
 
 	z := Factors{}
 	d := 1
-	fStar := p.DeepCopy()
-	degree := fStar.Degree()
+	degree := p.Degree()
+
+	h := new(Poly)
+	g := new(Poly)
 
 	for degree >= 2*d {
-		exp.Mul(exp, q)
-		h := new(Poly).PowMod(X, exp, fStar)
+		exp.Lsh(exp, 128)
+		h.PowMod(X, exp, p)
 		h.Add(h, X)
-		g := new(Poly).Gcd(h, fStar)
+		g.Gcd(h, p)
 
 		if !g.IsOne() {
 			z = append(z, Factor{*g, d})
-			fStar, _ = fStar.Div(fStar, g)
-			degree = fStar.Degree()
+			p, _ = p.Div(p, g)
+			degree = p.Degree()
 		}
 		d++
 	}
 
-	if !fStar.IsOne() {
-		z = append(z, Factor{*fStar, fStar.Degree()})
+	if !p.IsOne() {
+		z = append(z, Factor{*p, p.Degree()})
 	} else if len(z) == 0 {
 		z = append(z, Factor{*p, 1})
 	}

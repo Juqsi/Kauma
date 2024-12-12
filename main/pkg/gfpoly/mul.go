@@ -20,7 +20,13 @@ func (g *GfpolyMul) Execute() {
 func (p *Poly) Mul(a, b *Poly) *Poly {
 	result := make(Poly, len(*a)+len(*b)-1)
 	for indexA, factorA := range *a {
+		if factorA.Sign() == 0 {
+			continue
+		}
 		for indexB, factorB := range *b {
+			if factorB.Sign() == 0 {
+				continue
+			}
 			c := actions.Gfmul128(factorA, factorB)
 			result[indexA+indexB].Xor(&result[indexA+indexB], &c)
 		}

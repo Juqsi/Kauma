@@ -11,9 +11,7 @@ import (
 )
 
 func runTestcases(testCases models.TestcaseFile) string {
-	result := make(map[string]map[string]interface{})
-	handlerCounts := make(map[string]int)
-	errorOccured := false
+	result := make(map[string]map[string]interface{}, len(testCases.Testcases))
 	var mu sync.Mutex
 	var wg sync.WaitGroup
 
@@ -50,7 +48,7 @@ func runTestcases(testCases models.TestcaseFile) string {
 
 	jobQueue := make(chan Job, len(testCases.Testcases))
 
-	numCPUs := runtime.NumCPU()
+	numCPUs := runtime.NumCPU() * 2
 	numWorkers := numCPUs
 
 	worker := func() {
@@ -62,18 +60,13 @@ func runTestcases(testCases models.TestcaseFile) string {
 			defer func() {
 				if r := recover(); r != nil {
 					mu.Lock()
-					errorOccured = true
 					_, _ = fmt.Fprintf(os.Stderr, "Error in testcase \n action: %s \n Arguments: %s: %v\n", testCase.Action, testCase.Arguments, r)
 					_, _ = fmt.Fprintf(os.Stderr, "Stacktrace:\n%s\n", debug.Stack())
-					handlerCounts[testCase.Action+"-recovered"]++
 					mu.Unlock()
 				}
 			}()
 
 			if handler, found := handlers[testCase.Action]; found {
-				mu.Lock()
-				handlerCounts[testCase.Action]++
-				mu.Unlock()
 
 				if res, err := handler(testCase.Arguments); err == nil {
 					mu.Lock()
@@ -105,11 +98,6 @@ func runTestcases(testCases models.TestcaseFile) string {
 	}{Response: result}
 
 	a, _ := json.Marshal(res)
-
-	if errorOccured {
-		stats, _ := json.Marshal(handlerCounts)
-		_, _ = fmt.Fprintf(os.Stderr, "Statistik: \n %s", stats)
-	}
 
 	return string(a)
 }

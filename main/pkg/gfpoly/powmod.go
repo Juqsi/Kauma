@@ -1,7 +1,6 @@
 package gfpoly
 
 import (
-	"Abgabe/main/pkg/actions"
 	"math/big"
 )
 
@@ -20,12 +19,11 @@ func (g *GfpolyPowMod) Execute() {
 }
 
 func (p *Poly) PowMod(base *Poly, k *big.Int, m *Poly) *Poly {
-	result := &Poly{actions.OneBlock}
+	result := &Poly{*big.NewInt(1)}
 
 	workingK := new(big.Int).Set(k)
 	workingBase := base.DeepCopy()
-
-	for workingK.Sign() != 0 {
+	for workingK.Sign() == 1 {
 		if workingK.Bit(0) == 1 {
 			result.Mul(result, workingBase)
 			result.Mod(result, m)
