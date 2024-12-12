@@ -1,7 +1,6 @@
 package gfpoly
 
 import (
-	"fmt"
 	"math/big"
 )
 
@@ -12,9 +11,7 @@ type GfpolyDdf struct {
 
 func (g *GfpolyDdf) Execute() {
 	polyA := NewPolyFromBase64(g.F)
-	fmt.Println(polyA.Base64())
 	factors := polyA.Ddf()
-	fmt.Println(polyA.Base64())
 	g.Factors = factors.Sort().Base64Degree()
 
 }
