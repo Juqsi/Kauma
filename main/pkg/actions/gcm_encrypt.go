@@ -34,15 +34,15 @@ func (args *Gcm_Encrypt) Execute() {
 	switch args.Algorithm {
 	case "aes128":
 		lastXor = firstBlock(key, nonce, AesEncrypt)
-		hGcm, hBig = calculateH(key, AesEncrypt)
-		textGcm, textBig = gcmBlocksEncryption(key, nonce, plaintext, AesEncrypt)
+		hGcm, hBig = CalculateH(key, AesEncrypt)
+		textGcm, textBig = GcmBlocksEncryption(key, nonce, plaintext, AesEncrypt)
 	case "sea128":
 		lastXor = firstBlock(key, nonce, Sea128Encrypt)
-		hGcm, hBig = calculateH(key, Sea128Encrypt)
-		textGcm, textBig = gcmBlocksEncryption(key, nonce, plaintext, Sea128Encrypt)
+		hGcm, hBig = CalculateH(key, Sea128Encrypt)
+		textGcm, textBig = GcmBlocksEncryption(key, nonce, plaintext, Sea128Encrypt)
 	}
 
-	lGcm, lBig := calculateL(plaintext, ad)
+	lGcm, lBig := CalculateL(plaintext, ad)
 
 	resultGhash := GHASHBigEndian(hBig, textBig, lBig, ad)
 
@@ -64,23 +64,23 @@ func firstBlock(key, nonce big.Int, encryption Encryption) big.Int {
 	nonce.Lsh(&nonce, 32).SetBit(&nonce, 0, 1)
 	lastXor, err := encryption(key, nonce)
 	if err != nil {
-		panic("1 Error in gcmBlocksEncryption: " + err.Error())
+		panic("1 Error in GcmBlocksEncryption: " + err.Error())
 	}
 	return lastXor
 }
 
 // Step 2
-func calculateH(key big.Int, encryption Encryption) (hGcm, hBig big.Int) {
+func CalculateH(key big.Int, encryption Encryption) (hGcm, hBig big.Int) {
 	hGcm, err := encryption(key, *new(big.Int))
 	if err != nil {
-		panic("2 Error in gcmBlocksEncryption: " + err.Error())
+		panic("2 Error in GcmBlocksEncryption: " + err.Error())
 	}
 	hBig = utils.NewLongFromBigInt(hGcm).GcmToggle().Int
 	return hGcm, hBig
 }
 
 // Step 4.3
-func calculateL(plaintext, ad big.Int) (lGcm, lBig big.Int) {
+func CalculateL(plaintext, ad big.Int) (lGcm, lBig big.Int) {
 	plaintextLen := (plaintext.BitLen() + 7) / 8 * 8
 
 	lGcm = *big.NewInt(int64((ad.BitLen() + 7) / 8 * 8))
@@ -90,7 +90,7 @@ func calculateL(plaintext, ad big.Int) (lGcm, lBig big.Int) {
 	return lGcm, lBig
 }
 
-func gcmBlocksEncryption(key, nonce, plaintxt big.Int, encryption Encryption) (textGcm, textBig big.Int) {
+func GcmBlocksEncryption(key, nonce, plaintxt big.Int, encryption Encryption) (textGcm, textBig big.Int) {
 	plaintext := *new(big.Int).Set(&plaintxt)
 
 	//Step 3
@@ -105,7 +105,7 @@ func gcmBlocksEncryption(key, nonce, plaintxt big.Int, encryption Encryption) (t
 		//encrypted block berechnen
 		cipherBlock, err := encryption(key, nonce)
 		if err != nil {
-			panic("3.1 Error in gcmBlocksEncryption: " + err.Error())
+			panic("3.1 Error in GcmBlocksEncryption: " + err.Error())
 		}
 
 		//zu big endian umdrehen für
@@ -140,10 +140,12 @@ func gcmBlocksEncryption(key, nonce, plaintxt big.Int, encryption Encryption) (t
 }
 
 // gibt in bigEndian zurück
-func GHASHBigEndian(hBig big.Int, ciphers big.Int, lBig, ad big.Int) big.Int {
+func GHASHBigEndian(hBig big.Int, ciphersText big.Int, lBig, AssociatedData big.Int) big.Int {
 	sixteenByte := big.NewInt(1)
 	sixteenByte.Lsh(sixteenByte, 128)
 	sixteenByte.Sub(sixteenByte, big.NewInt(1))
+	ad := *new(big.Int).Set(&AssociatedData)
+	ciphers := *new(big.Int).Set(&ciphersText)
 
 	// tmp ist in big endian return in bigInt
 	adBlock := new(big.Int).And(&ad, sixteenByte)

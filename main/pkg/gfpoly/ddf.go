@@ -16,6 +16,7 @@ func (g *GfpolyDdf) Execute() {
 
 }
 
+// TODO change Factor to FactorModelWithDegree
 func (p *Poly) Ddf() Factors {
 	X := NewPolyFromBase64([]string{"AAAAAAAAAAAAAAAAAAAAAA==", "gAAAAAAAAAAAAAAAAAAAAA=="})
 	exp := big.NewInt(1)

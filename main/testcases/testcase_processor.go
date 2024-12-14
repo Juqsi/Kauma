@@ -39,6 +39,7 @@ func runTestcases(testCases models.TestcaseFile) string {
 		"gfpoly_factor_sff": handleGfpolySff,
 		"gfpoly_factor_ddf": handleGfpolyDdf,
 		"gfpoly_factor_edf": handleGfpolyEdf,
+		"gcm_crack":         handleGcmCrack,
 	}
 
 	type Job struct {

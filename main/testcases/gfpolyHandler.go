@@ -117,3 +117,16 @@ func handleGfpolyEdf(argsData []byte) (map[string]interface{}, error) {
 	args.Execute()
 	return map[string]interface{}{"factors": args.Factors}, nil
 }
+
+func handleGcmCrack(argsData []byte) (map[string]interface{}, error) {
+	args := new(gfpoly.GcmCrack)
+	if err := json.Unmarshal(argsData, &args); err != nil {
+		return nil, err
+	}
+	args.Execute()
+	return map[string]interface{}{
+		"tag":  args.Tag,
+		"mask": args.Mask,
+		"H":    args.H,
+	}, nil
+}

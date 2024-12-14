@@ -31,15 +31,15 @@ func (args *Gcm_Decrypt) Execute() {
 	switch args.Algorithm {
 	case "aes128":
 		lastXor = firstBlock(key, nonce, AesEncrypt)
-		_, hBig = calculateH(key, AesEncrypt)
-		textGcm, _ = gcmBlocksEncryption(key, nonce, ciphertext, AesEncrypt)
+		_, hBig = CalculateH(key, AesEncrypt)
+		textGcm, _ = GcmBlocksEncryption(key, nonce, ciphertext, AesEncrypt)
 	case "sea128":
 		lastXor = firstBlock(key, nonce, Sea128Encrypt)
-		_, hBig = calculateH(key, Sea128Encrypt)
-		textGcm, _ = gcmBlocksEncryption(key, nonce, ciphertext, Sea128Encrypt)
+		_, hBig = CalculateH(key, Sea128Encrypt)
+		textGcm, _ = GcmBlocksEncryption(key, nonce, ciphertext, Sea128Encrypt)
 	}
 
-	_, lBig := calculateL(ciphertext, ad)
+	_, lBig := CalculateL(ciphertext, ad)
 
 	resultGhash := GHASHBigEndian(hBig, ciphertext, lBig, ad)
 
