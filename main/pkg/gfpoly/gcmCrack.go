@@ -44,7 +44,7 @@ func (args *GcmCrack) Execute() {
 		me.AssociatedData = utils.NewBigEndianLongFromGcmInBase64(m.AssociatedData).Int
 		me.Tag = utils.NewBigEndianLongFromGcmInBase64(m.Tag).Int
 		_, me.L = actions.CalculateL(m.Ciphertext, m.AssociatedData)
-		me.Poly = *New128PolyFromFactors([]big.Int{me.AssociatedData, me.Ciphertext, me.L, me.Tag})
+		me.Poly = *New128PolyFromFactors([]big.Int{me.AssociatedData, me.Ciphertext, me.L, me.Tag}, []string{m.AssociatedData, m.Ciphertext, m.Tag, m.Tag})
 		messages = append(messages, *me)
 	}
 	poly := new(Poly).Add(&messages[0].Poly, &messages[1].Poly)

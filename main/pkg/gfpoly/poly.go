@@ -3,6 +3,7 @@ package gfpoly
 import (
 	"Abgabe/main/pkg/actions"
 	"Abgabe/main/pkg/utils"
+	"encoding/base64"
 	"math/big"
 	"math/rand"
 )
@@ -17,16 +18,27 @@ func NewPolyFromBase64(poly []string) *Poly {
 	return &p
 }
 
-func New128PolyFromFactors(values []big.Int) *Poly {
+func New128PolyFromFactors(values []big.Int, valuesString []string) *Poly {
 	p := Poly{}
 	HundredTwentyEightOneBit := new(big.Int).Lsh(big.NewInt(1), 128)
 	HundredTwentyEightOneBit.Sub(HundredTwentyEightOneBit, big.NewInt(1))
-	for _, va := range values {
+	for INDEX, va := range values {
+		value, err := base64.StdEncoding.DecodeString(valuesString[INDEX])
+		if err != nil {
+			panic("base64 decode error")
+
+		}
+		actualLen := (len(value) + 15) / 16
 		v := new(big.Int).Set(&va)
+		lenV := (v.BitLen() + 127) / 128
 		for v.Sign() == 1 {
 			p = append(Poly{*new(big.Int).And(v, HundredTwentyEightOneBit)}, p...)
 			v.Rsh(v, 128)
 		}
+		for i := 0; i < actualLen-lenV; i++ {
+			p = append(Poly{*big.NewInt(0)}, p...)
+		}
+
 	}
 	return &p
 }

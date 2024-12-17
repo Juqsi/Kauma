@@ -49,7 +49,7 @@ func runTestcases(testCases models.TestcaseFile) string {
 
 	jobQueue := make(chan Job, len(testCases.Testcases))
 
-	numCPUs := runtime.NumCPU() * 2
+	numCPUs := runtime.NumCPU()
 	numWorkers := numCPUs
 
 	worker := func() {
