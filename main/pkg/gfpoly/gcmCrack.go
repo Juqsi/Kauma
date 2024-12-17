@@ -3,7 +3,6 @@ package gfpoly
 import (
 	"Abgabe/main/pkg/actions"
 	"Abgabe/main/pkg/utils"
-	"fmt"
 	"math/big"
 )
 
@@ -49,7 +48,6 @@ func (args *GcmCrack) Execute() {
 		messages = append(messages, *me)
 	}
 	poly := new(Poly).Add(&messages[0].Poly, &messages[1].Poly)
-	fmt.Println(poly.Base64())
 	//H candiandes calculation
 	candidates := poly.FindRoots()
 	//calculation of GHASH

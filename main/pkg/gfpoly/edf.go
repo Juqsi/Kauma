@@ -3,6 +3,7 @@ package gfpoly
 import (
 	"Abgabe/main/pkg/actions"
 	"math/big"
+	"sync"
 )
 
 type GfpolyEdf struct {
@@ -29,23 +30,66 @@ func (p *Polys) Edf(f *Poly, d int) Polys {
 	exp.Sub(exp, big.NewInt(1))
 	exp.Div(exp, big.NewInt(3))
 	g := new(Poly)
+
 	for len(z) < n {
 		h := RandomPolynomial(f.Degree())
 
 		g.PowMod(h, exp, f)
 		g.Add(g, &Poly{actions.OneBlock})
 
+		// Channel für parallele Ergebnisse
+		type Result struct {
+			Index int
+			NewZ  []Poly
+		}
+
+		results := make(chan Result, len(z))
+		var wg sync.WaitGroup
+
+		// Starte parallele Verarbeitung
 		for i := len(z) - 1; i >= 0; i-- {
 			u := z[i]
 			if u.Degree() > d {
-				j := new(Poly).Gcd(&u, g)
-				if !j.IsOne() && j.Cmp(&u) != 0 {
-					tmp, _ := new(Poly).Div(&u, j)
-					z = append(z[:i], append(z[i+1:], []Poly{*j.makeMonic(j), *tmp.makeMonic(tmp)}...)...)
-				}
+				wg.Add(1)
+				go func(i int, u Poly, g *Poly) {
+					defer wg.Done()
+					j := new(Poly).Gcd(&u, g)
+					if !j.IsOne() && j.Cmp(&u) != 0 {
+						tmp, _ := new(Poly).Div(&u, j)
+						results <- Result{
+							Index: i,
+							NewZ:  []Poly{*j.makeMonic(j), *tmp.makeMonic(tmp)},
+						}
+					} else {
+						results <- Result{
+							Index: i,
+							NewZ:  []Poly{u},
+						}
+					}
+				}(i, u, g)
 			}
 		}
+
+		wg.Wait()
+		close(results)
+
+		newZMap := make(map[int][]Poly)
+		for res := range results {
+			newZMap[res.Index] = res.NewZ
+		}
+
+		newZ := make([]Poly, 0, len(z)*2)
+		for i := 0; i < len(z); i++ {
+			if updated, ok := newZMap[i]; ok {
+				newZ = append(newZ, updated...)
+			} else {
+				newZ = append(newZ, z[i])
+			}
+		}
+
+		z = newZ
 	}
+
 	*p = z
 	return *p
 }
