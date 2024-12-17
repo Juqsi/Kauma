@@ -46,6 +46,35 @@ func TestGcmCrack_Execute(t *testing.T) {
 				H:    "Nxn7h7ruk8eiNAG6AfhUFg==",
 				Mask: "tXjFK5vCqIPl6fKAJAyy9A==",
 			},
+		}, {
+			title: "TC004",
+			input: GcmCrack{
+				Nonce: "YboP6dIQFdu31NLj",
+				M1: message{
+					Ciphertext:     "AA==",
+					AssociatedData: "",
+					Tag:            "j08k1qlTnc4DG9GNYe5LMA==",
+				},
+				M2: message{
+					Ciphertext:     "4YWg3Ak7ehMjgL/lHC+h0LJx",
+					AssociatedData: "sfJmDicCC5FFAqS2k/Il",
+					Tag:            "Y841Gau407BeWRZwWohgrw==",
+				},
+				M3: message{
+					Ciphertext:     "X8buN7x+6fy4Ow==",
+					AssociatedData: "",
+					Tag:            "HItl3dOadXt3E3KWGzSnyA==",
+				},
+				Forgery: Forgery{
+					Ciphertext:     "UXXMhLXP8XF7",
+					AssociatedData: "",
+				},
+			},
+			expected: GcmCrackExpected{
+				Tag:  "6/z9g/O0KhSFtFBskx3zhA==",
+				H:    "L6qefn4OL06sCTP0vx3Gvg==",
+				Mask: "pm0a9I45a4LGZJjPA0i3DQ==",
+			},
 		},
 	}
 

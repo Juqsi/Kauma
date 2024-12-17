@@ -42,7 +42,7 @@ func (args *Gcm_Encrypt) Execute() {
 		textGcm, textBig = GcmBlocksEncryption(key, nonce, plaintext, Sea128Encrypt)
 	}
 
-	lGcm, lBig := CalculateL(plaintext, ad)
+	lGcm, lBig := CalculateL(args.Plaintext, args.Ad)
 
 	resultGhash := GHASHBigEndian(hBig, textBig, lBig, ad)
 
@@ -80,12 +80,25 @@ func CalculateH(key big.Int, encryption Encryption) (hGcm, hBig big.Int) {
 }
 
 // Step 4.3
-func CalculateL(plaintext, ad big.Int) (lGcm, lBig big.Int) {
-	plaintextLen := (plaintext.BitLen() + 7) / 8 * 8
+func CalculateL(encodedPlaintext, encodedAd string) (lGcm, lBig big.Int) {
+	plaintext, err := base64.StdEncoding.DecodeString(encodedPlaintext)
+	if err != nil {
+		panic("base64 decode error")
 
-	lGcm = *big.NewInt(int64((ad.BitLen() + 7) / 8 * 8))
+	}
+
+	ad, err := base64.StdEncoding.DecodeString(encodedAd)
+	if err != nil {
+		panic("base64 decode error")
+	}
+
+	plaintextLen := len(plaintext) * 8
+	adLen := len(ad) * 8
+
+	lGcm = *big.NewInt(int64(adLen))
 	lGcm.Lsh(&lGcm, 64)
 	lGcm.Add(&lGcm, big.NewInt(int64(plaintextLen)))
+
 	lBig = utils.NewLongFromBigInt(lGcm).GcmToggle().Int
 	return lGcm, lBig
 }

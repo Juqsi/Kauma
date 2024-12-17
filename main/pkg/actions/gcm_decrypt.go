@@ -39,7 +39,7 @@ func (args *Gcm_Decrypt) Execute() {
 		textGcm, _ = GcmBlocksEncryption(key, nonce, ciphertext, Sea128Encrypt)
 	}
 
-	_, lBig := CalculateL(ciphertext, ad)
+	_, lBig := CalculateL(args.Ciphertext, args.Ad)
 
 	resultGhash := GHASHBigEndian(hBig, ciphertext, lBig, ad)
 

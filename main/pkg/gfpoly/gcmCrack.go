@@ -3,6 +3,7 @@ package gfpoly
 import (
 	"Abgabe/main/pkg/actions"
 	"Abgabe/main/pkg/utils"
+	"fmt"
 	"math/big"
 )
 
@@ -43,14 +44,14 @@ func (args *GcmCrack) Execute() {
 		me.Ciphertext = utils.NewBigEndianLongFromGcmInBase64(m.Ciphertext).Int
 		me.AssociatedData = utils.NewBigEndianLongFromGcmInBase64(m.AssociatedData).Int
 		me.Tag = utils.NewBigEndianLongFromGcmInBase64(m.Tag).Int
-		_, me.L = actions.CalculateL(me.Ciphertext, me.AssociatedData)
+		_, me.L = actions.CalculateL(m.Ciphertext, m.AssociatedData)
 		me.Poly = *New128PolyFromFactors([]big.Int{me.AssociatedData, me.Ciphertext, me.L, me.Tag})
 		messages = append(messages, *me)
 	}
 	poly := new(Poly).Add(&messages[0].Poly, &messages[1].Poly)
+	fmt.Println(poly.Base64())
 	//H candiandes calculation
 	candidates := poly.FindRoots()
-
 	//calculation of GHASH
 	for _, candidate := range candidates {
 		ghash := actions.GHASHBigEndian(candidate, messages[0].Ciphertext, messages[0].L, messages[0].AssociatedData)
@@ -61,7 +62,7 @@ func (args *GcmCrack) Execute() {
 			forgeryCipherText := utils.NewBigEndianLongFromGcmInBase64(args.Forgery.Ciphertext).Int
 			forgeryAd := utils.NewBigEndianLongFromGcmInBase64(args.Forgery.AssociatedData).Int
 
-			_, forgeryL := actions.CalculateL(forgeryCipherText, forgeryAd)
+			_, forgeryL := actions.CalculateL(args.Forgery.Ciphertext, args.Forgery.AssociatedData)
 			resultGhash := actions.GHASHBigEndian(candidate, forgeryCipherText, forgeryL, forgeryAd)
 
 			forgeryTag := *new(big.Int).Xor(&resultGhash, mask)
@@ -87,7 +88,6 @@ func (p *Poly) FindRoots() []big.Int {
 			for _, dFactor := range ddfFactors {
 				if dFactor.Factor.Degree() == 1 {
 					candidates = append(candidates, dFactor.Factor[0])
-
 				} else if dFactor.Exponent == 1 {
 					edfFactors := new(Polys).Edf(&dFactor.Factor, dFactor.Exponent)
 					for _, eFactor := range edfFactors {
