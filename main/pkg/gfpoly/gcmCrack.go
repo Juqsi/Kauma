@@ -3,7 +3,6 @@ package gfpoly
 import (
 	"Abgabe/main/pkg/actions"
 	"Abgabe/main/pkg/utils"
-	"fmt"
 	"math/big"
 )
 
@@ -42,19 +41,15 @@ func (args *GcmCrack) Execute() {
 	for _, m := range []message{args.M1, args.M2, args.M3} {
 		me := new(mes)
 		me.Ciphertext = utils.GetContent(m.Ciphertext)
-		fmt.Println(me.Ciphertext.Content.Text(16))
-		fmt.Println(utils.NewBigEndianLongFromGcmInBase64(m.Ciphertext).Int.Text(16))
 		me.AssociatedData = utils.GetContent(m.AssociatedData)
 		me.Tag = utils.NewBigEndianLongFromGcmInBase64(m.Tag).Int
 		_, me.L = actions.CalculateL(m.Ciphertext, m.AssociatedData)
 		me.Poly = *New128PolyFromFactors([]utils.Text{me.AssociatedData, me.Ciphertext, {Content: me.L, Len: 16}, {Content: me.Tag, Len: 16}})
-		fmt.Println(me.Poly.Base64())
 		messages = append(messages, *me)
 	}
 	poly := new(Poly).Add(&messages[0].Poly, &messages[1].Poly)
 	//H candiandes calculation
 	candidates := poly.FindRoots()
-	fmt.Println(len(candidates))
 	//calculation of GHASH
 	for _, candidate := range candidates {
 		ghash := actions.GHASHBigEndian(candidate, messages[0].Ciphertext, messages[0].L, messages[0].AssociatedData)

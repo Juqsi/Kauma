@@ -3,7 +3,6 @@ package gfpoly
 import (
 	"Abgabe/main/pkg/actions"
 	"Abgabe/main/pkg/utils"
-	"fmt"
 	"math/big"
 	"math/rand"
 )
@@ -24,10 +23,8 @@ func New128PolyFromFactors(values []utils.Text) *Poly {
 	HundredTwentyEightOneBit.Sub(HundredTwentyEightOneBit, big.NewInt(1))
 	for _, va := range values {
 		v := new(big.Int).Set(&va.Content)
-		fmt.Println(va.Len)
 		addedBlocks := 0
 		for va.Len-addedBlocks > 0 {
-			fmt.Println(addedBlocks)
 			p = append(Poly{*new(big.Int).And(v, HundredTwentyEightOneBit)}, p...)
 			v.Rsh(v, 128)
 			addedBlocks += 16
