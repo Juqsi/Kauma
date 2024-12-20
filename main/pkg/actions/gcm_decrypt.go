@@ -41,7 +41,7 @@ func (args *Gcm_Decrypt) Execute() {
 
 	_, lBig := CalculateL(args.Ciphertext, args.Ad)
 
-	resultGhash := GHASHBigEndian(hBig, ciphertext, lBig, ad)
+	resultGhash := GHASHBigEndian(hBig, utils.Text{Content: ciphertext, Len: (ciphertext.BitLen() + 7) / 8}, lBig, utils.Text{Content: ad, Len: (ad.BitLen() + 7) / 8})
 
 	resultGhash = utils.NewLongFromBigInt(resultGhash).GcmToggle().Int
 

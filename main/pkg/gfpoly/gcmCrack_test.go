@@ -106,6 +106,36 @@ func TestGcmCrack_Execute(t *testing.T) {
 				Mask: "DwEnwF8sT2XVN6iKwiw5DQ==",
 			},
 		},
+		{
+			title: "TC-044",
+			input: GcmCrack{
+				Nonce: "dSnsOOdUm+zLlxmn",
+				M1: message{
+					Ciphertext:     "DXGFu4XmL09TniMhfTnWeoL+opU=",
+					AssociatedData: "Bwef/Q==",
+					Tag:            "8n8ZfCOq1ssasqwSAMVYZw==",
+				},
+				M2: message{
+					Ciphertext:     "rh/q6bFnsF0T5hGC+09+IYSnxmt+mlUVh6T74mub",
+					AssociatedData: "",
+					Tag:            "aIQUe4tVo9gwYe6uKUOIMw==",
+				},
+				M3: message{
+					Ciphertext:     "smySdBkjJh+H+tKHfyQyi9kc34EFCALtftql",
+					AssociatedData: "",
+					Tag:            "Sywxs5I9H8dIlO/kkRfTIw==",
+				},
+				Forgery: Forgery{
+					Ciphertext:     "2P42l/en0YafuS9v369tbyqdKw==",
+					AssociatedData: "otGU+fn2SqpxMbpJtESQSAA=",
+				},
+			},
+			expected: GcmCrackExpected{
+				H:    "DYm9lLdoEHHP07QEP4/d5w==",
+				Tag:  "lnZ1Hmj1JaCyG4EqtoBcGg==",
+				Mask: "/u/j4kfGi7ZwLAaBCFpaIg==",
+			},
+		},
 	}
 
 	for _, testcase := range testcases {

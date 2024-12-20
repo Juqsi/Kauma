@@ -44,7 +44,7 @@ func (args *Gcm_Encrypt) Execute() {
 
 	lGcm, lBig := CalculateL(args.Plaintext, args.Ad)
 
-	resultGhash := GHASHBigEndian(hBig, textBig, lBig, ad)
+	resultGhash := GHASHBigEndian(hBig, utils.Text{Content: textBig, Len: (textBig.BitLen() + 7) / 8}, lBig, utils.Text{Content: ad, Len: (ad.BitLen() + 7) / 8})
 
 	resultGhash = utils.NewLongFromBigInt(resultGhash).GcmToggle().Int
 
@@ -153,12 +153,12 @@ func GcmBlocksEncryption(key, nonce, plaintxt big.Int, encryption Encryption) (t
 }
 
 // gibt in bigEndian zurück
-func GHASHBigEndian(hBig big.Int, ciphersText big.Int, lBig, AssociatedData big.Int) big.Int {
+func GHASHBigEndian(hBig big.Int, ciphersText utils.Text, lBig big.Int, AssociatedData utils.Text) big.Int {
 	sixteenByte := big.NewInt(1)
 	sixteenByte.Lsh(sixteenByte, 128)
 	sixteenByte.Sub(sixteenByte, big.NewInt(1))
-	ad := *new(big.Int).Set(&AssociatedData)
-	ciphers := *new(big.Int).Set(&ciphersText)
+	ad := *new(big.Int).Set(&AssociatedData.Content)
+	ciphers := *new(big.Int).Set(&ciphersText.Content)
 
 	// tmp ist in big endian return in bigInt
 	adBlock := new(big.Int).And(&ad, sixteenByte)
@@ -169,7 +169,7 @@ func GHASHBigEndian(hBig big.Int, ciphersText big.Int, lBig, AssociatedData big.
 
 	ad.Rsh(&ad, 128)
 
-	for ad.Sign() > 0 {
+	for i := 16; i < AssociatedData.Len; i += 16 {
 		adBlock = new(big.Int).And(&ad, sixteenByte)
 		tmp.Xor(&tmp, adBlock)
 		tmp = Gfmul128(tmp, hBig)

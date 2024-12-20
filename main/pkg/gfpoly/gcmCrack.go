@@ -3,6 +3,7 @@ package gfpoly
 import (
 	"Abgabe/main/pkg/actions"
 	"Abgabe/main/pkg/utils"
+	"fmt"
 	"math/big"
 )
 
@@ -27,8 +28,8 @@ type GcmCrack struct {
 }
 
 type mes struct {
-	Ciphertext     big.Int
-	AssociatedData big.Int
+	Ciphertext     utils.Text
+	AssociatedData utils.Text
 	Tag            big.Int
 	L              big.Int
 	Poly           Poly
@@ -40,16 +41,20 @@ func (args *GcmCrack) Execute() {
 	messages := make([]mes, 0, 3)
 	for _, m := range []message{args.M1, args.M2, args.M3} {
 		me := new(mes)
-		me.Ciphertext = utils.NewBigEndianLongFromGcmInBase64(m.Ciphertext).Int
-		me.AssociatedData = utils.NewBigEndianLongFromGcmInBase64(m.AssociatedData).Int
+		me.Ciphertext = utils.GetContent(m.Ciphertext)
+		fmt.Println(me.Ciphertext.Content.Text(16))
+		fmt.Println(utils.NewBigEndianLongFromGcmInBase64(m.Ciphertext).Int.Text(16))
+		me.AssociatedData = utils.GetContent(m.AssociatedData)
 		me.Tag = utils.NewBigEndianLongFromGcmInBase64(m.Tag).Int
 		_, me.L = actions.CalculateL(m.Ciphertext, m.AssociatedData)
-		me.Poly = *New128PolyFromFactors([]big.Int{me.AssociatedData, me.Ciphertext, me.L, me.Tag}, []string{m.AssociatedData, m.Ciphertext, m.Tag, m.Tag})
+		me.Poly = *New128PolyFromFactors([]utils.Text{me.AssociatedData, me.Ciphertext, {Content: me.L, Len: 16}, {Content: me.Tag, Len: 16}})
+		fmt.Println(me.Poly.Base64())
 		messages = append(messages, *me)
 	}
 	poly := new(Poly).Add(&messages[0].Poly, &messages[1].Poly)
 	//H candiandes calculation
 	candidates := poly.FindRoots()
+	fmt.Println(len(candidates))
 	//calculation of GHASH
 	for _, candidate := range candidates {
 		ghash := actions.GHASHBigEndian(candidate, messages[0].Ciphertext, messages[0].L, messages[0].AssociatedData)
@@ -57,8 +62,8 @@ func (args *GcmCrack) Execute() {
 		ghashM3 := actions.GHASHBigEndian(candidate, messages[2].Ciphertext, messages[2].L, messages[2].AssociatedData)
 		tagM3 := new(big.Int).Xor(mask, &ghashM3)
 		if tagM3.Cmp(&messages[2].Tag) == 0 {
-			forgeryCipherText := utils.NewBigEndianLongFromGcmInBase64(args.Forgery.Ciphertext).Int
-			forgeryAd := utils.NewBigEndianLongFromGcmInBase64(args.Forgery.AssociatedData).Int
+			forgeryCipherText := utils.GetContent(args.Forgery.Ciphertext)
+			forgeryAd := utils.GetContent(args.Forgery.AssociatedData)
 
 			_, forgeryL := actions.CalculateL(args.Forgery.Ciphertext, args.Forgery.AssociatedData)
 			resultGhash := actions.GHASHBigEndian(candidate, forgeryCipherText, forgeryL, forgeryAd)
