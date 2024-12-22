@@ -30,21 +30,37 @@ func (p *Polys) Edf(f *Poly, d int) Polys {
 	exp.Div(exp, big.NewInt(3))
 	g := new(Poly)
 
+	const maxWorkers = 4
+	workerPool := make(chan struct{}, maxWorkers)
+	jobQueue := make(chan int, len(z))
+	resultQueue := make(chan map[int][]Poly, len(z))
+
+	for i := 0; i < maxWorkers; i++ {
+		go func() {
+			for i := range jobQueue {
+				u := z[i]
+				newZMap := make(map[int][]Poly)
+				if u.Degree() > d {
+					j := new(Poly).Gcd(&u, g)
+					if !j.IsOne() && j.Cmp(&u) != 0 {
+						tmp, _ := new(Poly).Div(&u, j)
+						newZMap[i] = []Poly{*j.makeMonic(j), *tmp.makeMonic(tmp)}
+					} else {
+						newZMap[i] = []Poly{u}
+					}
+				}
+				resultQueue <- newZMap
+			}
+		}()
+	}
+
 	for len(z) < n {
 		h := RandomPolynomial(f.Degree())
 
 		g.PowMod(h, exp, f)
 		g.Add(g, &Poly{actions.OneBlock})
 
-		const maxWorkers = 4
-		workerPool := make(chan struct{}, maxWorkers)
-
-		type Result struct {
-			Index int
-			NewZ  []Poly
-		}
-
-		results := make(chan Result, len(z))
+		newZMap := make(map[int][]Poly)
 		var wg sync.WaitGroup
 
 		for i := len(z) - 1; i >= 0; i-- {
@@ -52,48 +68,40 @@ func (p *Polys) Edf(f *Poly, d int) Polys {
 			if u.Degree() > d {
 				workerPool <- struct{}{} // Blockiert, wenn maxWorkers erreicht
 				wg.Add(1)
-				go func(i int, u Poly, g *Poly) {
-					defer wg.Done()
-					defer func() { <-workerPool }() // Gibt einen Worker frei
-
-					j := new(Poly).Gcd(&u, g)
-					if !j.IsOne() && j.Cmp(&u) != 0 {
-						tmp, _ := new(Poly).Div(&u, j)
-						results <- Result{
-							Index: i,
-							NewZ:  []Poly{*j.makeMonic(j), *tmp.makeMonic(tmp)},
-						}
-					} else {
-						results <- Result{
-							Index: i,
-							NewZ:  []Poly{u},
-						}
-					}
-				}(i, u, g)
+				go p.processPoly(i, u, g, workerPool, newZMap, &wg)
 			}
 		}
 
 		wg.Wait()
-		close(results)
-		close(workerPool)
 
-		newZMap := make(map[int][]Poly)
-		for res := range results {
-			newZMap[res.Index] = res.NewZ
-		}
-
-		newZ := make([]Poly, 0, len(z)*2)
-		for i := 0; i < len(z); i++ {
-			if updated, ok := newZMap[i]; ok {
-				newZ = append(newZ, updated...)
-			} else {
-				newZ = append(newZ, z[i])
-			}
-		}
-
-		z = newZ
+		z = p.rebuildZ(z, newZMap)
 	}
 
 	*p = z
 	return *p
+}
+
+func (p *Polys) processPoly(i int, u Poly, g *Poly, workerPool chan struct{}, newZMap map[int][]Poly, wg *sync.WaitGroup) {
+	defer wg.Done()
+	defer func() { <-workerPool }() // Worker freigeben
+
+	j := new(Poly).Gcd(&u, g)
+	if !j.IsOne() && j.Cmp(&u) != 0 {
+		tmp, _ := new(Poly).Div(&u, j)
+		newZMap[i] = []Poly{*j.makeMonic(j), *tmp.makeMonic(tmp)}
+	} else {
+		newZMap[i] = []Poly{u}
+	}
+}
+
+func (p *Polys) rebuildZ(z []Poly, newZMap map[int][]Poly) []Poly {
+	newZ := make([]Poly, 0, len(z)*2)
+	for i := 0; i < len(z); i++ {
+		if updated, ok := newZMap[i]; ok {
+			newZ = append(newZ, updated...)
+		} else {
+			newZ = append(newZ, z[i])
+		}
+	}
+	return newZ
 }
