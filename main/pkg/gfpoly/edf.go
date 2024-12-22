@@ -16,7 +16,6 @@ func (g *GfpolyEdf) Execute() {
 	polyA := NewPolyFromBase64(g.F)
 	factors := new(Polys).Edf(polyA, g.D)
 	g.Factors = factors.Sort().Base64()
-
 }
 
 func (p *Polys) Edf(f *Poly, d int) Polys {
@@ -37,7 +36,9 @@ func (p *Polys) Edf(f *Poly, d int) Polys {
 		g.PowMod(h, exp, f)
 		g.Add(g, &Poly{actions.OneBlock})
 
-		// Channel für parallele Ergebnisse
+		const maxWorkers = 4
+		workerPool := make(chan struct{}, maxWorkers)
+
 		type Result struct {
 			Index int
 			NewZ  []Poly
@@ -46,13 +47,15 @@ func (p *Polys) Edf(f *Poly, d int) Polys {
 		results := make(chan Result, len(z))
 		var wg sync.WaitGroup
 
-		// Starte parallele Verarbeitung
 		for i := len(z) - 1; i >= 0; i-- {
 			u := z[i]
 			if u.Degree() > d {
+				workerPool <- struct{}{} // Blockiert, wenn maxWorkers erreicht
 				wg.Add(1)
 				go func(i int, u Poly, g *Poly) {
 					defer wg.Done()
+					defer func() { <-workerPool }() // Gibt einen Worker frei
+
 					j := new(Poly).Gcd(&u, g)
 					if !j.IsOne() && j.Cmp(&u) != 0 {
 						tmp, _ := new(Poly).Div(&u, j)
@@ -72,6 +75,7 @@ func (p *Polys) Edf(f *Poly, d int) Polys {
 
 		wg.Wait()
 		close(results)
+		close(workerPool)
 
 		newZMap := make(map[int][]Poly)
 		for res := range results {
