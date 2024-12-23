@@ -43,21 +43,11 @@ func glasskeyPRNG(K []byte, s []byte, lengths []int) []string {
 	hashS := sha256.Sum256(s)
 	Kstar := append(hashK[:], hashS[:]...)
 
-	// Erstelle ein einziges HMAC-Objekt
-	h := hmac.New(sha256.New, Kstar)
-
 	var stream []byte
 	for _, length := range lengths {
 		for len(stream) < length {
-			iBytes := make([]byte, 8)
-			binary.LittleEndian.PutUint64(iBytes, counter)
-
-			h.Reset()
-			h.Write(iBytes)
-			block := h.Sum(nil)
-
+			block := glasskeyPRNGBlock(Kstar, counter)
 			stream = append(stream, block...)
-
 			counter++
 		}
 		encodedStream := base64.StdEncoding.EncodeToString(stream[:length])
@@ -66,4 +56,13 @@ func glasskeyPRNG(K []byte, s []byte, lengths []int) []string {
 	}
 
 	return result
+}
+
+func glasskeyPRNGBlock(KStar []byte, i uint64) []byte {
+	iBytes := make([]byte, 8)
+	binary.LittleEndian.PutUint64(iBytes, i)
+
+	h := hmac.New(sha256.New, KStar)
+	h.Write(iBytes)
+	return h.Sum(nil)
 }
