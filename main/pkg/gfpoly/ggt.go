@@ -15,13 +15,15 @@ func (g *GfpolyGgt) Execute() {
 
 func (p *Poly) Gcd(a, b *Poly) *Poly {
 	if a.IsZero() {
-		*p = *b
+		p.makeMonic(b)
 		return p
 	}
+
 	if b.IsZero() {
-		*p = *a
+		p.makeMonic(a)
 		return p
 	}
+
 	if a.Cmp(b) == -1 {
 		return p.Gcd(b, a)
 	}
