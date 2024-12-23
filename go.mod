@@ -1,6 +1,6 @@
 module Abgabe
 
-go 1.23.4
+go 1.23.3
 
 require github.com/stretchr/testify v1.9.0
 
